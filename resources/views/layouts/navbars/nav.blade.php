@@ -47,7 +47,7 @@
                  with font-awesome or any other icon font library -->
             <li class="nav-header">Menu</li>
             <li class="nav-item">
-              <a href="../calendar.html" class="nav-link">
+              <a href="{{ route('dashboard') }}" class="nav-link">
                 <i class="nav-icon far fa-calendar-alt"></i>
                 <p>
                   Dashboard
@@ -61,7 +61,14 @@
                   Reserve Vehicle
                 </p>
               </a>
+              <a href="{{ route('reservation.index') }}" class="nav-link">
+                <i class="fa-solid fas fa-calendar-check"></i>
+                <p>
+                  Approvals
+                </p>
+              </a>
             </li>
+            <li class="nav-header">RDU Settings</li>
             <li class="nav-item">
               <a href="{{ route('vehicle.index') }}" class="nav-link">
                 <i class="nav-icon fas fa-car"></i>
@@ -78,11 +85,23 @@
                 </p>
               </a>
             </li>
-            <li class="nav-header">MISCELLANEOUS</li>
+            <li class="nav-header">Admin Settings</li>
             <li class="nav-item">
-              <a href="https://adminlte.io/docs/3.1/" class="nav-link">
+              <a href="{{ route('role.index') }}" class="nav-link">
                 <i class="nav-icon fas fa-file"></i>
-                <p>Documentation</p>
+                <p>Roles</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('group.index') }}" class="nav-link">
+                <i class="nav-icon fas fa-file"></i>
+                <p>Groups</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('user.index') }}" class="nav-link">
+                <i class="nav-icon fas fa-file"></i>
+                <p>Users</p>
               </a>
             </li>
             <li class="nav-item mb-5 mt-5">

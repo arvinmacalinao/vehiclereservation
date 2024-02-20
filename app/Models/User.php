@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\UserRole;
+use App\Models\UserGroup;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -80,5 +82,15 @@ class User extends Authenticatable
     public function getOrderByLastNameAttribute($value)
     {
         return ucwords(strtolower($this->last_name)).' '.ucwords($this->first_name).'. '.ucwords(substr($this->middle_name, 0, 1));
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(UserGroup::class, 'user_groups', 'u_id', 'g_id');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(UserRole::class, 'user_roles', 'u_id', 'role_id');
     }
 }

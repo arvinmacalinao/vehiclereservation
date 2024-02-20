@@ -1,6 +1,6 @@
 @extends('layouts.app', [
     'class' => '',
-    'elementActive' => 'reservation'
+    'elementActive' => 'driver'
 ])
 @section('content')
 <!-- Main content -->
@@ -31,7 +31,7 @@
       <div class="card-body p-0">
         <div class="row">
             <div class="col-md-6">
-                <a class="btn btn-success btn-sm m-2" href="{{ route('reservation.add') }}">
+                <a class="btn btn-success btn-sm m-2" href="{{ route('user.add') }}">
                     <i class="fas fa-folder">
                     </i>
                     Add New {{ $data['page']}}
@@ -51,13 +51,9 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Date of Travel</th> 
-                    <th class="text-nowrap">Plate Number</th>
-                    <th class="text-nowrap">Driver</th>
-                    <th class="text-nowrap">Destination</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Created At</th>
-                    <th class="text-right" style="width:20%">Action</th>
+                    <th>Name</th>
+                    <th>created_at</th>
+                    <th>updated_at</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,32 +64,21 @@
             @foreach ($rows as $row)
                 <tr>
                     <td>{{ $ctr++ }}</td>
-                    <td class="text-nowrap"><div>{!! $row->reservation_dates !!}</div></td>
-                    <td></td>
-                    {{-- <a class="text-primary" data-toggle="tooltip" data-placement="left" title="{{ $reservation->passenger_names() }}" href="#">{{ $reservation->vehicle == null ? '' : $reservation->vehicle->plate_number }}</a> --}}
-                    <td class="text-nowrap">{!! $row->driver_name !!}</td>
-                    <td class="w-50 mw-0 long-text"><a class="text-primary" data-placement="left" data-toggle="tooltip" data-placement="top" title="{{ $row->purpose }}" href="#">{!! nl2br($row->destination) !!}</a></td> 
-                    <td class="text-center"><i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-title="Pending">Pending</i>
-                        {{-- @if(count($approvals->approval_status))
-                        	@foreach($approvals->approval_status as $approval)
-                        		<div>{!! $approval->employee->full_initials !!}: {!! $approval->action == 0 ? '<i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-title="Pending"></i>' : ($approval->action == 1 ? '<i class="fa fa-check-circle text-success" data-toggle="tooltip" data-title="Approved"></i>' : '<i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-title="Disapproved"></i>') !!} {!! $approval->created_at->format('F d, Y h:i A') !!}</div>
-                        	@endforeach
-                        @else
-                        	@if($approvals->is_active == 1) {!! getStatus($approvals) !!} @else <i><small class="font-weight-bold text-danger">CANCELLED</small></i> @endif
-                        @endif --}}
-                    </td>                
-                    <td class="text-center text-nowrap">{!! $row->created_at->format('F d, Y h:i A') !!}</td>
+                    <td>{{ $row->fullName }}</td>
+                    <td>{{ $row->created_at }}</td>
+                    <td>{{ $row->updated_at }}</td>
                     <td  class="project-actions text-right">
                         <a class="btn btn-primary btn-sm" href="#">
                             <i class="fas fa-folder">
                             </i>
                             View
                         </a>
-                        <a class="btn btn-success btn-sm" href="">
+                        <a class="btn btn-success btn-sm" href="{{ route('user.edit', ['id' => $row->u_id]) }}">
                             <i class="fas fa-pencil-alt">
                             </i>
                             Edit
                         </a>
+                        {{-- {{ route('driver.delete', ['id' => $row->d_id]) }} --}}
                         <a class="btn btn-danger btn-sm  row-delete-btn" href="" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete">
                             <i class="fas fa-trash">
                             </i>
@@ -115,7 +100,7 @@
 @push('scripts')
 <script>
     $(document).ready(function() {
-        alert(1);
+
     $(".alert").delay(4000).slideUp(200, function() {
         $(this).alert('close');
     });

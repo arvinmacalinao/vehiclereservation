@@ -14,7 +14,7 @@ class CreatePassengersTable extends Migration
     public function up()
     {
         Schema::create('passengers', function (Blueprint $table) {
-            $table->increments('pass_id');
+            $table->id('pass_id');
             $table->unsignedBigInteger('r_id')->unsigned();
             $table->foreign('r_id')->references('r_id')->on('reservations')->onUpdate('cascade')->onDelete('cascade');
             $table->integer('u_id')->unsigned();

@@ -15,4 +15,9 @@ class Passenger extends Model
     protected $fillable = [
         'r_id', 'u_id', 'tagged', 'approved', 'disapproved', 'created_at', 'updated_at'
     ];
+
+	public function reservation()
+	{
+		return $this->hasOne('hrmis\Models\Reservation', 'id', 'reservation_id');
+	}
 }

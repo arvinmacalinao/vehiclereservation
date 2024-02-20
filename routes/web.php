@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\RolesController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\DashboardController;
@@ -36,6 +39,27 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::any('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+// users
+Route::any('users', [UserController::class, 'index'])->name('user.index');
+Route::get('user/add', [UserController::class, 'create'])->name('user.add');
+Route::post('user/store/{id}', [UserController::class, 'store'])->name('user.store');
+Route::get('user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
+Route::get('user/delete/{id}', [UserController::class, 'destroy'])->name('user.delete');
+
+// Roles
+Route::any('roles', [RolesController::class, 'index'])->name('role.index');
+Route::get('role/add', [RolesController::class, 'create'])->name('role.add');
+Route::post('role/store/{id}', [RolesController::class, 'store'])->name('role.store');
+Route::get('role/edit/{id}', [RolesController::class, 'edit'])->name('role.edit');
+Route::get('role/delete/{id}', [RolesController::class, 'destroy'])->name('role.delete');
+
+// Group
+Route::any('groups', [GroupController::class, 'index'])->name('group.index');
+Route::get('group/add', [GroupController::class, 'create'])->name('group.add');
+Route::post('group/store/{id}', [GroupController::class, 'store'])->name('group.store');
+Route::get('group/edit/{id}', [GroupController::class, 'edit'])->name('group.edit');
+Route::get('group/delete/{id}', [GroupController::class, 'destroy'])->name('group.delete');
 
 // Vehicles
 Route::any('vehicles', [VehicleController::class, 'index'])->name('vehicle.index');

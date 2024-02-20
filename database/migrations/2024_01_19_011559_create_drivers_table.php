@@ -14,7 +14,7 @@ class CreateDriversTable extends Migration
     public function up()
     {
         Schema::create('drivers', function (Blueprint $table) {
-            $table->increments('d_id');
+            $table->id('d_id');
             $table->string('name');
             $table->softDeletes();
             $table->timestamps();

@@ -26,6 +26,18 @@ class Reservation extends Model
 
     public function getReservationDatesAttribute($value)
     {
-        return $this->start_date == $this->end_date ? $this->start_date->format('F j, Y') : ($this->start_date->format('F') == $this->end_date->format('F') ? $this->start_date->format('F j')."-".$this->end_date->format('j, Y') : $this->start_date->format('F j, Y')."-".$this->end_date->format('F j, Y'));
+        $startDate = new \DateTime($this->start_date);
+        $endDate = new \DateTime($this->end_date);
+    
+        return $startDate->format('F j, Y') == $endDate->format('F j, Y')
+            ? $startDate->format('F j, Y')
+            : ($startDate->format('F') == $endDate->format('F')
+                ? $startDate->format('F j') . "-" . $endDate->format('j, Y')
+                : $startDate->format('F j, Y') . " - " . $endDate->format('F j, Y'));
+    }
+    
+    public function approval_status()
+    {
+        return $this->hasMany(ApprovalStatus::class, 'as_id', 'r_id');
     }
 }

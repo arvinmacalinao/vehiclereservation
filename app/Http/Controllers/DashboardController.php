@@ -38,7 +38,7 @@ class DashboardController extends Controller
         $currentMonth = $now->month;
         $currentYear = $now->year;
 
-        return view('pages.dashboard');
+        return view('pages.dashboard', compact('msg'));
     }
 
     /**
