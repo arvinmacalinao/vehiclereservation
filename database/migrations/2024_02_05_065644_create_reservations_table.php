@@ -15,9 +15,9 @@ class CreateReservationsTable extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id('r_id');
-            $table->integer('u_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('u_id')->nullable();
             $table->foreign('u_id')->references('u_id')->on('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->integer('v_id')->unsigned()->nullable();
+            $table->unsignedBigInteger('v_id')->nullable();
             $table->foreign('v_id')->references('v_id')->on('vehicles')->onUpdate('cascade')->onDelete('cascade');
             $table->string('driver_name')->nullable();
             $table->text('purpose');

@@ -6,9 +6,11 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\ApprovalController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,7 +83,23 @@ Route::get('reservation/add', [ReservationController::class, 'create'])->name('r
 Route::post('reservation/store/{id}', [ReservationController::class, 'store'])->name('reservation.store');
 Route::get('reservation/edit/{id}', [ReservationController::class, 'edit'])->name('reservation.edit');
 Route::get('reservation/delete/{id}', [ReservationController::class, 'destroy'])->name('reservation.delete');
+Route::get('reservation/view/{id}', [ReservationController::class, 'view'])->name('reservation.view');
 
+/* Notification */
+Route::any('notifications', [NotificationController::class, 'index'])->name('notification.list');
+Route::any('notifications/unsold', [NotificationController::class, 'unsold'])->name('notification.list.unsold');
+Route::any('notifications/sold', [NotificationController::class, 'sold'])->name('notification.list.sold');
+Route::get('mark-single-as-read/{notification}', [NotificationController::class, 'markSingleAsRead'])->name('mark-single-as-read');
+Route::post('mark-selected-as-read', [NotificationController::class, 'markAsRead'])->name('mark-selected-as-read');
+
+// Approval
+Route::any('approvals', [ApprovalController::class, 'index'])->name('approval.index');
+Route::get('approval/add', [ApprovalController::class, 'create'])->name('approval.add');
+Route::post('approval/store/{id}', [ApprovalController::class, 'store'])->name('approval.store');
+Route::get('approval/edit/{id}', [ApprovalController::class, 'edit'])->name('approval.edit');
+Route::get('approval/delete/{id}', [ApprovalController::class, 'destroy'])->name('approval.delete');
+Route::any('approval/{id}/approve', [ApprovalController::class, 'approve'])->name('approval.approve');
+Route::any('approval/{id}/disapprove', [ApprovalController::class, 'disapprove'])->name('approval.disapprove');
 
 });
     

@@ -43,6 +43,7 @@
         </div>
         <div class="flex-grow-1">
             <form method="POST" action="{{ route('reservation.store', ['id' => $id]) }}">
+                
                 @csrf
                 <div class="form-group row">
                     <div class="col-md-2">
@@ -72,15 +73,7 @@
                         <label for="passenger">No. of Passengers <span class="text-danger">*</span> <i class="text-danger font-weight-bold">{{ $errors->first('passenger') }}</i></label>
                         <input type="number" min="1" name="passenger" value="{{ old('passenger', $r->passenger) }}" id="passenger" class="form-control form-control-sm">
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="passengers">Employees <span class="text-danger">*</span> <i class="text-danger font-weight-bold">{{ $errors->first('passengers') }}</i></label>
-                    <select name="passengers" id="passengers" class="form-control" data-placeholder="">
-                        @foreach($users as $u)
-                            <option value="{{ $u->id }}" {{ collect(old('passengers', $r->passengers->pluck('id') ?? []))->contains($u->id) ? 'selected' : '' }}>{{ $u->order_by_last_name }}</option>
-                        @endforeach
-                    </select>
-                </div>                
+                </div>          
                 <div class="form-group">
                     <label for="destination">Destination <span class="text-danger">*</span> <i class="text-danger font-weight-bold">{{ $errors->first('destination') }}</i></label>
                     <textarea name="destination" id="destination" class="form-control form-control-sm rounded-0" rows="3">{{ old('destination', $r->destination) }}</textarea>
@@ -108,10 +101,6 @@
 @endsection
 @push('scripts')
     <script>
-        $(document).ready(function(){
-            alert(1);
-
-
-        });
+    
     </script>
 @endpush

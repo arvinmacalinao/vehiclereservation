@@ -15,9 +15,9 @@ class CreatePassengersTable extends Migration
     {
         Schema::create('passengers', function (Blueprint $table) {
             $table->id('pass_id');
-            $table->unsignedBigInteger('r_id')->unsigned();
+            $table->unsignedBigInteger('r_id')->nullable();
             $table->foreign('r_id')->references('r_id')->on('reservations')->onUpdate('cascade')->onDelete('cascade');
-            $table->integer('u_id')->unsigned();
+            $table->unsignedBigInteger('u_id')->nullable();
             $table->foreign('u_id')->references('u_id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->tinyInteger('tagged')->default(0);
             $table->tinyInteger('approved')->default(0);

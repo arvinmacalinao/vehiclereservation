@@ -110,7 +110,7 @@ class LoginController extends Controller
         $user   = User::create($request->all());
         
         $request->session()->put('session_msg', 'Account Registered.');
-        return redirect(route('auth.login'));
+        return redirect(route('users.loginform'));
     }
 }
 

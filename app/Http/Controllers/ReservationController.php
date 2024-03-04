@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use View;
 use App\Models\User;
+use App\Models\Group;
 use App\Models\Vehicle;
 use App\Models\UserGroup;
 use App\Models\Reservation;
@@ -34,7 +35,10 @@ class ReservationController extends Controller
     {
         $msg            = $request->session()->pull('session_msg', '');
 
-        $rows           = Reservation::paginate(20);
+        // $rows           = Reservation::where('u_id', Auth::id())->where('r_id', 1)->get();
+        // $approval       = count($rows->approvals);
+        // dd($approval);
+        $rows           = Reservation::where('u_id', Auth::id())->paginate(20);
 
         return view('pages.reservation.index', compact('rows', 'msg'));
     }
@@ -45,58 +49,57 @@ class ReservationController extends Controller
 
         $id                 =      0;
         $r                  =      new Reservation;
-        $types 	 	    =      VehicleType::get();
-		$users 	 	        =      User::where('u_enabled', '=', 1)->orderBy('last_name', 'asc')->get();
+        $types 	 	        =      VehicleType::get();
 
 
-        return view('pages.reservation.form', compact('r', 'types', 'users', 'id', 'msg'));
+        return view('pages.reservation.form', compact('r', 'types', 'id', 'msg'));
     }
 
     public function store(Request $request, $id)
-	{
-		$vehicle 		= Vehicle::find($request->get('v_id'));
-		$passengers 	= $request->get('passengers');
+    {	
+		if($id == 0){
+            $request->request->add(['u_id' 	=> Auth::id(), 'requested_by' => Auth::id() ]);
+            $r          = Reservation::create($request->all());
+            $last_id    = $r->r_id;
 
-		$request->request->add(['u_id' 	=> Auth::id(), 'requested_by' => Auth::id() ]);
-		
-		if($id == 0) {
-
+            // Get the authenticated user
             $user = Auth::id();
             
             // Get the user's group ID
-            $group = UserGroup::where('u_id', $user)->first();
-            
-           
-            $groupId = $group->g_id;
+            $group_id = UserGroup::where('u_id', $user)->firstOrFail();
 
-            // Find the manager of the user's group
-            $groupManager = UserRoles::where('role_id', 2) // Assuming manager role ID is 1
-                                ->whereHas('UserGroup', function ($query) use ($groupId) {
-                                    $query->where('id', $groupId);
-                                })
-                                ->firstOrFail()
-                                ->user;
+            $group = Group::where('g_id', $group_id->g_id)->firstOrFail();
 
-            // Create an approval for the group manager
-            $reservation->approvals()->create([
-                'user_id' => $groupManager->id,
-                'status' => 'pending'
+            // Find or create a single approval for the group
+            $approval = $group->approvals()->firstOrCreate([
+                'g_id' => $group->g_id, // Assuming the column name is 'usergroup_id'
+                'r_id' => $last_id,
+                'status_id' => 1, // Set appropriate status ID for pending
+                'remarks' => '', // Optional: Add remarks if needed
             ]);
-
-            $r    = Reservation::create($request->all());
+            
             $request->session()->put('session_msg', 'Record successfully added.');
-		}
-		else {
-			$alert          = 'alert-info';
-            $message        = 'Reservation successfully updated.';
-            $reservation    = Reservation::find($id);
-            $notif_tags 	= array_diff($passengers, $reservation->passengers->pluck('id')->toArray());
-            $reservation->update($request->all());
-            $reservation->passengers()->sync($request->get('passengers'));
- 		}
+            }
+         else {
+            $request->session()->put('session_msg', 'Record updated.');
+        }
+        return redirect(route('reservation.index'));
+    }
 
- 		// $this->submitComment($id == 0 ? $reservation->id : $id, 1);
- 		// $this->newNotification($notif_tags, $reservation->id, 'Vehicle Reservation', 'View Reservation', 'Tag');
-		return redirect()->route('reservation.index');
-	}
+    public function view(Request $request, $id)
+    {
+        $msg            = $request->session()->pull('session_msg', '');
+        $r              = Reservation::where('r_id', $id)->first();
+
+         // Get the value of app_id from the query parameters
+        $app_id = $request->query('app_id');
+
+        if(!$r) {
+            $request->session()->put('session_msg', 'Record not found.');
+            return redirect(route('reservation.index'));
+        }
+        $types          = VehicleType::orderBy('name', 'asc')->get();
+        
+        return view('pages.reservation.view', compact('id', 'msg', 'r', 'types', 'app_id'));
+    }
 }

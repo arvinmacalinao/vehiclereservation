@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use View;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,10 +36,22 @@ class DashboardController extends Controller
 
         $now = now(); // Get the current date and time
 
-        $currentMonth = $now->month;
-        $currentYear = $now->year;
+        $reservations = Reservation::where('status', '1')->get();
 
-        return view('pages.dashboard', compact('msg'));
+        // Format reservation data for FullCalendar
+        $events = [];
+        foreach ($reservations as $reservation) {
+            $events[] = [
+                'title' => $reservation->purpose,
+                'start' => $reservation->start_date . 'T' . $reservation->time, 
+                'time' => $reservation->time,
+                'purpose' => $reservation->purpose,
+                'destination' => $reservation->destination,
+            ];
+        }
+
+
+        return view('pages.dashboard', compact('msg', 'events'));
     }
 
     /**

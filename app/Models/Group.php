@@ -20,6 +20,11 @@ class Group extends Model
 		return $this->hasMany(User::class, 'g_id', 'u_id')->where('u_enabled', '=', 1);
 	}
 
+	public function approvals()
+    {
+        return $this->hasMany(Approval::class, 'g_id');
+    }
+
 	// public function signatories()
 	// {
 	// 	return $this->hasMany('hrmis\Models\SignatoryGroup', 'group_id', 'id');

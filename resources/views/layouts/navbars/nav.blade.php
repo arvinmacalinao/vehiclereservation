@@ -9,16 +9,43 @@
         <li class="nav-item d-none d-sm-inline-block">
           <a href="../../index3.html" class="nav-link">Home</a>
         </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="#" class="nav-link">Contact</a>
-        </li>
       </ul>
   
       <!-- Right navbar links -->
       <ul class="navbar-nav ml-auto">
         <!-- Navbar Search -->
         <li class="nav-item">
-          
+          <li class="nav-item dropdown">
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell" aria-hidden="true"></i></i></a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+              <li><a href="{{ route('notification.list') }}" class="dropdown-item">View All Notifications</a></li>
+              <!-- Display the total number of unsold and sold notifications -->
+              @php
+                  $allNotificationsCount = $notifications->count();
+              @endphp
+
+              @if($allNotificationsCount >= 1)
+                  <span class="badge badge-danger">{{ $allNotificationsCount }}</span>
+              @endif
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-cog" aria-hidden="true"></i></a>
+            <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+              <li><a href="#" class="dropdown-item">Profile</a></li>
+              <li class="dropdown-divider"></li>
+              <!-- Level two dropdown-->
+              <li class="dropdown-submenu dropdown-hover">
+                <form class="dropdown-item" action="{{ route('logout') }}" id="formLogOut" method="POST" style="display: none;">
+                  @csrf
+                </form>
+                <div class="dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" onclick="document.getElementById('formLogOut').submit();">{{ __('Log out') }}</a>
+              </div>
+              </li>
+              <!-- End Level two -->
+            </ul>
+          </li>
         </li>
       </ul>
     </nav>
@@ -27,8 +54,8 @@
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
       <!-- Brand Logo -->
-      <a href="../../index3.html" class="brand-link">
-        <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <a href="{{ route('dashboard') }}" class="brand-link">
+        <img src="../../images/vr_logo.png" alt="" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Vehicle Res</span>
       </a>
   
@@ -61,7 +88,9 @@
                   Reserve Vehicle
                 </p>
               </a>
-              <a href="{{ route('reservation.index') }}" class="nav-link">
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('approval.index') }}" class="nav-link">
                 <i class="fa-solid fas fa-calendar-check"></i>
                 <p>
                   Approvals

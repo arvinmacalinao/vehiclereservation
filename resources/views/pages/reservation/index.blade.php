@@ -55,7 +55,8 @@
                     <th class="text-nowrap">Plate Number</th>
                     <th class="text-nowrap">Driver</th>
                     <th class="text-nowrap">Destination</th>
-                    <th class="text-center">Status</th>
+                    <th class="text-center" width="30%">Status</th>
+                    <th class="text-center">Created By</th>
                     <th class="text-center">Created At</th>
                     <th class="text-right" style="width:20%">Action</th>
                 </tr>
@@ -73,16 +74,23 @@
                     {{-- <a class="text-primary" data-toggle="tooltip" data-placement="left" title="{{ $reservation->passenger_names() }}" href="#">{{ $reservation->vehicle == null ? '' : $reservation->vehicle->plate_number }}</a> --}}
                     <td class="text-nowrap">{!! $row->driver_name !!}</td>
                     <td class="w-50 mw-0 long-text"><a class="text-primary" data-placement="left" data-toggle="tooltip" data-placement="top" title="{{ $row->purpose }}" href="#">{!! nl2br($row->destination) !!}</a></td> 
-                    <td class="text-center"><i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-title="Pending">Pending</i>
-                        {{-- @if(count($approvals->approval_status))
-                        	@foreach($approvals->approval_status as $approval)
-                        		<div>{!! $approval->employee->full_initials !!}: {!! $approval->action == 0 ? '<i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-title="Pending"></i>' : ($approval->action == 1 ? '<i class="fa fa-check-circle text-success" data-toggle="tooltip" data-title="Approved"></i>' : '<i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-title="Disapproved"></i>') !!} {!! $approval->created_at->format('F d, Y h:i A') !!}</div>
-                        	@endforeach
-                        @else
-                        	@if($approvals->is_active == 1) {!! getStatus($approvals) !!} @else <i><small class="font-weight-bold text-danger">CANCELLED</small></i> @endif
-                        @endif --}}
+                    <td class="text-center">
+                        @if(count($row->approvals))
+                            @foreach($row->approvals as $approval)
+                                @if(!$approval->u_id == null)
+                                <small>
+                                    {!! $approval->user->full_initials !!}:
+                                    {!! $approval->status_id == 1 ? '<i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i>' : ($approval->status_id == 2 ? '<i class="fa fa-check-circle text-success" data-toggle="tooltip" data-placement="top" title="Approved"></i>' : '<i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Disapproved"></i>') !!}<br>
+                                    {!! $approval->created_at->format('F d, Y h:i A') !!}
+                                </small><br>
+                                @endif
+                        @endforeach
+                        {{-- @else
+                        	@if($approvals->is_active == 1) {!! getStatus($approvals) !!} @else <i><small class="font-weight-bold text-danger">CANCELLED</small></i> @endif --}}
+                        @endif
                     </td>                
-                    <td class="text-center text-nowrap">{!! $row->created_at->format('F d, Y h:i A') !!}</td>
+                    <td class="text-center text-nowrap">{!! $row->user->FullName !!}</td>
+                    <td class="text-center text-nowrap">{!! $row->created_at->format('F d, Y') !!}</td>
                     <td  class="project-actions text-right">
                         <a class="btn btn-primary btn-sm" href="#">
                             <i class="fas fa-folder">

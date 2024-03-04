@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Approval;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserGroup extends Model
 {   
@@ -14,6 +15,6 @@ class UserGroup extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'u_id');
+        return $this->belongsTo(User::class, 'u_id', 'u_id');
     }
 }

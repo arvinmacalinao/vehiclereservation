@@ -84,13 +84,28 @@ class User extends Authenticatable
         return ucwords(strtolower($this->last_name)).' '.ucwords($this->first_name).'. '.ucwords(substr($this->middle_name, 0, 1));
     }
 
+    public function getFullInitialsAttribute($value)
+    {
+        return ucfirst(substr($this->first_name, 0, 1)).ucfirst(substr($this->middle_name, 0, 1)).ucfirst(substr($this->last_name, 0, 1));
+    }
+
     public function groups()
     {
-        return $this->belongsToMany(UserGroup::class, 'user_groups', 'u_id', 'g_id');
+        return $this->belongsToMany(UserGroup::class,'user_groups', 'u_id', 'g_id');
     }
 
     public function roles()
     {
         return $this->belongsToMany(UserRole::class, 'user_roles', 'u_id', 'role_id');
+    }
+
+    public function hasRole($roleName)
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    public function user_groups()
+    {
+        return $this->hasMany(UserGroup::class, 'u_id');
     }
 }
