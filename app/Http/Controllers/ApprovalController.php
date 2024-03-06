@@ -66,12 +66,22 @@ class ApprovalController extends Controller
             $vehicleManagerApproval->status_id = 1; // Set the status as pending
             $vehicleManagerApproval->save();
         }else{
-            $r_id = $currentApproval->r_id;
-            $reservation = Reservation::where('r_id', $r_id)->firstOrFail(); // Fetch single reservation
-            $reservation->status = 1;
-            $reservation->save(); // Update the status
+            // Check if both vehicle_id and driver_id are not null
+            if (request('v_id') && request('name')) {
+                // Update the status
+                $reservation->v_id = request('v_id');
+                $reservation->driver_name = request('name');
+                $reservation->status = 1;
+                $reservation->save();
+                // Other logic after approval...
+                
+                $request->session()->put('error', 'Approval updated successfully.');
+                return redirect()->route('approval.index');
+            } else {
+                $request->session()->put('error', 'Cannot approve reservation without assigning both vehicle and driver.');
+                return redirect()->route('approval.index');
+            }
         }
-
         $request->session()->put('session_msg', 'Approval updated successfully. New approval created for vehicle manager.');
         return redirect()->route('approval.index');
 

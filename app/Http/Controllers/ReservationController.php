@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use View;
 use App\Models\User;
 use App\Models\Group;
+use App\Models\Driver;
 use App\Models\Vehicle;
 use App\Models\UserGroup;
 use App\Models\Reservation;
 use App\Models\VehicleType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
@@ -100,6 +102,41 @@ class ReservationController extends Controller
         }
         $types          = VehicleType::orderBy('name', 'asc')->get();
         
-        return view('pages.reservation.view', compact('id', 'msg', 'r', 'types', 'app_id'));
+         // Fetch available vehicles and drivers
+        $availability = $this->getAvailableVehiclesAndDrivers($r->start_date, $r->end_date);
+        $availableVehicles = $availability['vehicles'];
+        $availableDrivers = $availability['drivers'];
+        
+        return view('pages.reservation.view', compact('id', 'msg', 'r', 'types', 'app_id', 'availableVehicles', 'availableDrivers'));
     }
+
+    public function getAvailableVehiclesAndDrivers($startDate, $endDate)
+{
+    // Fetch available vehicles
+    $availableVehicles = Vehicle::whereNotExists(function ($query) use ($startDate, $endDate) {
+        $query->select(DB::raw(1))
+            ->from('reservations')
+            ->whereRaw('vehicles.v_id = reservations.v_id')
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereDate('start_date', '<=', $endDate)
+                    ->whereDate('end_date', '>=', $startDate);
+            });
+    })->get();
+
+    // Fetch available drivers
+    $availableDrivers = Driver::whereNotExists(function ($query) use ($startDate, $endDate) {
+        $query->select(DB::raw(1))
+            ->from('reservations')
+            ->whereRaw('drivers.name = reservations.driver_name') // Assuming driver name is stored in the reservations table
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->whereDate('start_date', '<=', $endDate)
+                    ->whereDate('end_date', '>=', $startDate);
+            });
+    })->get();
+
+    return [
+        'vehicles' => $availableVehicles,
+        'drivers' => $availableDrivers,
+    ];
+}
 }

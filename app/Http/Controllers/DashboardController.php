@@ -47,6 +47,8 @@ class DashboardController extends Controller
                 'time' => $reservation->time,
                 'purpose' => $reservation->purpose,
                 'destination' => $reservation->destination,
+                'driver' => $reservation->driver_name,
+                'vehicle' => $reservation->vehicle->equipment_name,
             ];
         }
 

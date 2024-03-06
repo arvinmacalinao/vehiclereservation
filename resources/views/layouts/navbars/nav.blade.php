@@ -97,40 +97,91 @@
                 </p>
               </a>
             </li>
+            @php
+                // Get the authenticated user
+                $user = auth()->user();
+
+                // Check if the user belongs to the RDU group
+                $belongsToRDUGroup = $user->user_groups()->where('g_id', 3)->exists();
+            @endphp
+            @if ($belongsToRDUGroup)
             <li class="nav-header">RDU Settings</li>
-            <li class="nav-item">
-              <a href="{{ route('vehicle.index') }}" class="nav-link">
-                <i class="nav-icon fas fa-car"></i>
-                <p>
-                  Vehicles
-                </p>
+                <li class="nav-item">
+                    <a href="{{ route('vehicle.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-car"></i>
+                        <p>Vehicles</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('driver.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-columns"></i>
+                        <p>Drivers</p>
+                    </a>
+                </li>
+            @endif
+            @php
+                // Get the authenticated user's ID
+                $userId = auth()->id();
+                          
+                // Get the user's roles
+                $userRoles = App\Models\UserRole::where('u_id', $userId)->pluck('role_id');
+                          
+                // Get the role names associated with the user's roles
+                $roleNames = App\Models\Role::whereIn('role_id', $userRoles)->pluck('name');
+                          
+                // Check if the user has the SUPERADMIN role
+                $hasSuperAdminRole = $roleNames->contains('SUPERADMIN');
+            @endphp
+                          
+            @if ($hasSuperAdminRole)
+                <li class="nav-header">Admin Settings</li>
+                <li class="nav-item">
+                    <a href="{{ route('role.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-file"></i>
+                        <p>Roles</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('group.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-file"></i>
+                        <p>Groups</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('user.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-file"></i>
+                        <p>Users</p>
+                    </a>
+                </li>
+                <li class="nav-item mb-5 mt-5">
+                  <a href="#" class="nav-link">
+                    <i></i>
+                    <p></p>
+                  </a>
+                </li>
+                <li class="nav-item mb-5 mt-5">
+                  <a href="#" class="nav-link">
+                    <i></i>
+                    <p></p>
+                  </a>
+                </li>      
+                <li class="nav-item mb-5 mt-5">
+                  <a href="#" class="nav-link">
+                    <i></i>
+                    <p></p>
+                  </a>
+                </li>
+            @else
+            <li class="nav-item mb-5 mt-5">
+              <a href="#" class="nav-link">
+                <i></i>
+                <p></p>
               </a>
             </li>
-            <li class="nav-item">
-              <a href="{{ route('driver.index') }}" class="nav-link">
-                <i class="nav-icon fas fa-columns"></i>
-                <p>
-                  Drivers
-                </p>
-              </a>
-            </li>
-            <li class="nav-header">Admin Settings</li>
-            <li class="nav-item">
-              <a href="{{ route('role.index') }}" class="nav-link">
-                <i class="nav-icon fas fa-file"></i>
-                <p>Roles</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{ route('group.index') }}" class="nav-link">
-                <i class="nav-icon fas fa-file"></i>
-                <p>Groups</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{ route('user.index') }}" class="nav-link">
-                <i class="nav-icon fas fa-file"></i>
-                <p>Users</p>
+            <li class="nav-item mb-5 mt-5">
+              <a href="#" class="nav-link">
+                <i></i>
+                <p></p>
               </a>
             </li>
             <li class="nav-item mb-5 mt-5">
@@ -145,6 +196,13 @@
                 <p></p>
               </a>
             </li>
+            <li class="nav-item mb-5 mt-5">
+              <a href="#" class="nav-link">
+                <i></i>
+                <p></p>
+              </a>
+            </li>
+            @endif
             <li class="nav-item mb-5 mt-5">
               <a href="#" class="nav-link">
                 <i></i>

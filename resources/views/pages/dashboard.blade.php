@@ -38,6 +38,14 @@
     <div class="row">
       <div class="col-md-3">
       </div>
+      @if(strlen($msg) > 0)
+        <div class="alert alert-info alert-dismissible fade show" role="alert">
+            <strong>{{ $msg }}</strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+      @endif
         <!-- /.col -->
         <div class="col-md-12">
           <div class="card card-primary">
@@ -90,7 +98,8 @@
             events: {!! json_encode($events) !!}, // Pass reservation data to FullCalendar
             eventContent: function(info) {
                 var reservationInfo = '<b>Purpose:</b> ' + info.event.title + '<br>';
-                reservationInfo += '<b>Driver:</b> ' + info.event.extendedProps.driver_name + '<br>';
+                reservationInfo += '<b>Driver:</b> ' + info.event.extendedProps.driver + '<br>';
+                reservationInfo += '<b>Vehicle:</b> ' + info.event.extendedProps.vehicle + '<br>';
                 reservationInfo += '<b>Destination:</b> ' + info.event.extendedProps.destination + '<br>';
                 
                 // Convert time format from '19:47' to '7:47 PM'

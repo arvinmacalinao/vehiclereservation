@@ -19,7 +19,7 @@ class CreateApprovalsTable extends Migration
             $table->foreign('r_id')->references('r_id')->on('reservations')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('g_id')->nullable();
             $table->foreign('g_id')->references('g_id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
-            $table->unsignedInteger('u_id')->nullable();
+            $table->unsignedBigInteger('u_id')->nullable();
             $table->foreign('u_id')->references('u_id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('status_id')->nullable();
             $table->foreign('status_id')

@@ -101,11 +101,19 @@ class User extends Authenticatable
 
     public function hasRole($roleName)
     {
-        return $this->roles()->where('name', $roleName)->exists();
+        // Check if the user has a role with the given name
+        return $this->roles()->whereHas('role', function ($query) use ($roleName) {
+            $query->where('name', $roleName);
+        })->exists();
     }
 
     public function user_groups()
     {
         return $this->hasMany(UserGroup::class, 'u_id');
+    }
+
+    public function user_roles()
+    {
+        return $this->belongsToMany(UserRole::class, 'user_roles', 'u_id', 'role_id');
     }
 }

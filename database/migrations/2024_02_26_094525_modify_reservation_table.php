@@ -29,7 +29,8 @@ class ModifyReservationTable extends Migration
     public function down()
     {
         Schema::table('reservations', function (Blueprint $table) {
-            //
+            $table->dropForeign(['vtype_id']);
+            $table->dropColumn('vtype_id');
         });
     }
 }
