@@ -39,6 +39,7 @@ Route::middleware(['guest'])->group(function() {
 
 Route::group(['middleware' => 'auth'], function () {
 
+Route::get('user/profile/{id}', [UserController::class, 'profile'])->name('user.profile');
 Route::any('logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -49,6 +50,7 @@ Route::post('reservation/store/{id}', [ReservationController::class, 'store'])->
 Route::get('reservation/edit/{id}', [ReservationController::class, 'edit'])->name('reservation.edit');
 Route::get('reservation/delete/{id}', [ReservationController::class, 'destroy'])->name('reservation.delete');
 Route::get('reservation/view/{id}', [ReservationController::class, 'view'])->name('reservation.view');
+Route::get('reservation/{id}/view', [ReservationController::class, 'view2'])->name('reservation.view.view');
 
 /* Notification */
 Route::any('notifications', [NotificationController::class, 'index'])->name('notification.list');
@@ -74,7 +76,7 @@ Route::get('driver/delete/{id}', [DriverController::class, 'destroy'])->name('dr
 
 });
 
-Route::middleware(['auth', 'checkRole:MANAGER, SUPERADMIN, SUPERVISOR, VICE PRESIDENT'])->group(function () {
+Route::middleware(['auth', 'checkRole:MANAGER,SUPERADMIN,SUPERVISOR,VICE PRESIDENT'])->group(function () {
     // Routes accessible only to users with the 'admin' role
     // Approval
     Route::any('approvals', [ApprovalController::class, 'index'])->name('approval.index');

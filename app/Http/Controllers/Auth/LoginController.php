@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use View;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\UserRole;
+use App\Models\Notification;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserValidation;
 use App\Providers\RouteServiceProvider;
@@ -103,14 +105,35 @@ class LoginController extends Controller
         // Create default username
         $defaultUsername = substr($firstname, 0, 1) . $lastname;
 
-       
-
         $input = $request->validated();
         $request->request->add(['created_at' => Carbon::now(), 'username' => $defaultUsername]);
         $user   = User::create($request->all());
         
-        $request->session()->put('session_msg', 'Account Registered.');
+        $request->session()->put('session_msg', 'Account Registered. Kindly Notify the admin for credentials.');
+
+        // Notify admins
+        $this->notifyAdminsAboutNewUser($user);
+
         return redirect(route('users.loginform'));
+    }
+
+    private function notifyAdminsAboutNewUser($user) {
+        // Get the IDs of admins with the SUPERADMIN role
+        $superAdmins = UserRole::whereHas('roles', function ($query) {
+            $query->where('name', 'SUPERADMIN');
+        })->pluck('u_id')->toArray();
+    
+        // Create notifications for each admin
+        foreach ($superAdmins as $adminId) {
+            Notification::create([
+                'not_message' => 'New user registered: ' . $user->username,
+                'r_id' => null, // Assuming this is not relevant for this notification
+                'u_id' => $adminId,
+                'new_user_id' => $user->u_id, // Store the ID of the new user
+                'app_id' => null,
+                'read_at' => null,
+            ]);
+        }
     }
 }
 

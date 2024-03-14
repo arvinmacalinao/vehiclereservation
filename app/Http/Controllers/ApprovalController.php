@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use View;
+use App\Models\User;
 use App\Models\Approval;
 use App\Models\UserGroup;
 use App\Models\Reservation;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class ApprovalController extends Controller
@@ -65,6 +68,10 @@ class ApprovalController extends Controller
             $vehicleManagerApproval->g_id = $RDUGroupID; // Set the ID of the vehicle manager
             $vehicleManagerApproval->status_id = 1; // Set the status as pending
             $vehicleManagerApproval->save();
+
+           // Notify the users in the group
+            $this->notifyGroup($RDUGroupID, $vehicleManagerApproval);
+
         }else{
             // Check if both vehicle_id and driver_id are not null
             if (request('v_id') && request('name')) {
@@ -74,11 +81,13 @@ class ApprovalController extends Controller
                 $reservation->status = 1;
                 $reservation->save();
                 // Other logic after approval...
+
+                $this->notifyUser($reservation);
                 
-                $request->session()->put('error', 'Approval updated successfully.');
+                $request->session()->put('session_msg', 'Approval updated successfully.');
                 return redirect()->route('approval.index');
             } else {
-                $request->session()->put('error', 'Cannot approve reservation without assigning both vehicle and driver.');
+                $request->session()->put('session_msg', 'Cannot approve reservation without assigning both vehicle and driver.');
                 return redirect()->route('approval.index');
             }
         }
@@ -98,7 +107,44 @@ class ApprovalController extends Controller
 
         $request->session()->put('session_msg', 'Approval updated successfully.');
         return redirect()->route('approval.index');
-
     }
 
+    private function notifyGroup($groupId, $vehicleManagerApproval) {
+        // Retrieve all user IDs belonging to the specified group
+        // dd($vehicleManagerApproval->app_id);
+
+        $userIds = User::whereExists(function ($query) use ($groupId) {
+            $query->select('u_id')
+              ->from('user_groups as ug')
+              ->whereRaw('users.u_id = ug.u_id')
+              ->where('ug.g_id', $groupId);
+        })->pluck('u_id');
+
+        // Create notifications for each user in the group
+        foreach ($userIds as $userId) {
+        Notification::create([
+            'not_message' => 'New approval created by: ' . $vehicleManagerApproval->reservation->user->fullName,
+            'r_id' => null, // Assuming this is not relevant for this notification
+            'u_id' => $userId,
+            'new_user_id' => null,
+            'app_id' => $vehicleManagerApproval->app_id,
+            'read_at' => null,
+        ]);
+        }
+    }
+
+    private function notifyUser($reservation) {
+        $user = User::where('u_id', $reservation->u_id)->value('u_id');
+
+        // Create notifications for single user
+        Notification::create([
+            'not_message' => 'Vehicle Reservation has been approved by RDU',
+            'r_id' => $reservation->r_id,
+            'u_id' => $user,
+            'new_user_id' => null,
+            'app_id' => null,
+            'read_at' => null,
+        ]);
+        
+    }
 }

@@ -96,6 +96,7 @@
         var calendar = new FullCalendar.Calendar(calendarEl, {
             // Other configuration options...
             events: {!! json_encode($events) !!}, // Pass reservation data to FullCalendar
+            eventBackgroundColor: '#377eb8',
             eventContent: function(info) {
                 var reservationInfo = '<b>Purpose:</b> ' + info.event.title + '<br>';
                 reservationInfo += '<b>Driver:</b> ' + info.event.extendedProps.driver + '<br>';

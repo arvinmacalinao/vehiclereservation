@@ -84,7 +84,7 @@
       </form>
 
       <p class="mb-1">
-        <a class="nav-link" style="cursor: pointer" data-toggle="modal" data-target="#registerModal">{{ __('Forgot Password') }}</a>
+        {{-- <a class="nav-link" style="cursor: pointer" data-toggle="modal" data-target="#registerModal">{{ __('Forgot Password') }}</a> --}}
         <a class="nav-link" style="cursor: pointer" data-toggle="modal" data-target="#registerModal">{{ __('Register') }}</a>
       </p>
     </div>

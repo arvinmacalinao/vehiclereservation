@@ -30,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
             $user = Auth::user()->u_id;
             
             $notifications = Notification::where('u_id', $user)
+                ->where('read_at', null)
                 ->orderBy('created_at', 'desc')
                 ->get();
             $view->with('notifications', $notifications);

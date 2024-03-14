@@ -15,24 +15,27 @@
       <ul class="navbar-nav ml-auto">
         <!-- Navbar Search -->
         <li class="nav-item">
+          @php
+                    $allNotificationsCount = $notifications->count();
+          @endphp
           <li class="nav-item dropdown">
-            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell" aria-hidden="true"></i></i></a>
+            <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-bell" aria-hidden="true"></i>
+            @if($allNotificationsCount >= 1)
+              <span class="badge badge-danger">{{ $allNotificationsCount }}</span>
+            @endif
+            </a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-              <li><a href="{{ route('notification.list') }}" class="dropdown-item">View All Notifications</a></li>
-              <!-- Display the total number of unsold and sold notifications -->
-              @php
-                  $allNotificationsCount = $notifications->count();
-              @endphp
-
-              @if($allNotificationsCount >= 1)
-                  <span class="badge badge-danger">{{ $allNotificationsCount }}</span>
-              @endif
+              <li>
+                <a href="{{ route('notification.list') }}" class="dropdown-item">View All Notifications
+                </a><!-- Display the total number of unsold and sold notifications -->
+              </li>
+              
             </ul>
           </li>
           <li class="nav-item dropdown">
             <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle"><i class="fa fa-cog" aria-hidden="true"></i></a>
             <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
-              <li><a href="#" class="dropdown-item">Profile</a></li>
+              <li><a href="{{ route('user.profile', ['id' => Auth::id() ]) }}" class="dropdown-item">Profile</a></li>
               <li class="dropdown-divider"></li>
               <!-- Level two dropdown-->
               <li class="dropdown-submenu dropdown-hover">
@@ -64,7 +67,7 @@
         <!-- Sidebar user (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
           <div class="info">
-            <a href="#" class="d-block">{{ Auth::user()->fullname }}</a>
+            <a href="{{ route('user.profile', ['id' => Auth::id() ]) }}" class="d-block">{{ Auth::user()->fullname }}</a>
           </div>
         </div>
         <!-- Sidebar Menu -->
@@ -117,7 +120,7 @@
                         <i class="nav-icon fas fa-columns"></i>
                         <p>Drivers</p>
                     </a>
-                </li>
+              </li>
             @endif
             @php
                 // Get the authenticated user's ID
@@ -134,6 +137,19 @@
             @endphp
                           
             @if ($hasSuperAdminRole)
+            <li class="nav-header">RDU Settings</li>
+                <li class="nav-item">
+                    <a href="{{ route('vehicle.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-car"></i>
+                        <p>Vehicles</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('driver.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-columns"></i>
+                        <p>Drivers</p>
+                    </a>
+              </li>
                 <li class="nav-header">Admin Settings</li>
                 <li class="nav-item">
                     <a href="{{ route('role.index') }}" class="nav-link">

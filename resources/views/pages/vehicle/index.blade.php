@@ -74,11 +74,6 @@
                     <td>{{ $row->vehicle_type }}</td>
                     <td>{{ $row->remarks }}</td>
                     <td  class="project-actions text-right">
-                        <a class="btn btn-primary btn-sm" href="#">
-                            <i class="fas fa-folder">
-                            </i>
-                            View
-                        </a>
                         <a class="btn btn-success btn-sm" href="{{ route('vehicle.edit', ['id' => $row->v_id]) }}">
                             <i class="fas fa-pencil-alt">
                             </i>

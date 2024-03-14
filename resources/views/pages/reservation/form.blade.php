@@ -48,11 +48,11 @@
                 <div class="form-group row">
                     <div class="col-md-2">
                         <label for="start_date">Start Date <span class="text-danger">*</span> <i class="text-danger font-weight-bold">{{ $errors->first('start_date') }}</i></label>
-                        <input type="date" name="start_date" id="start_date" value="{{ old('start_date', $r->start_date == null ? '' : $r->start_date->format('m/d/Y')) }}" class="form-control form-control-sm" {{ $id != 0 ? 'disabled' : '' }}>
+                        <input type="date" name="start_date" id="start_date" value="{{ old('start_date', $r->start_date ? \Carbon\Carbon::parse($r->start_date)->format('Y-m-d') : '') }}" class="form-control form-control-sm" {{ $id != 0 ? 'disabled' : '' }}>
                     </div>
                     <div class="col-md-2">
                         <label for="end_date">End Date <span class="text-danger">*</span> <i class="text-danger font-weight-bold">{{ $errors->first('end_date') }}</i></label>
-                        <input type="date" name="end_date" id="end_date" value="{{ old('end_date', $r->end_date == null ? '' : $	$r->end_date->format('m/d/Y')) }}" class="form-control form-control-sm" {{ $id != 0 ? 'disabled' : '' }}>
+                        <input type="date" name="end_date" id="end_date" value="{{ old('end_date', $r->end_date ? \Carbon\Carbon::parse($r->end_date)->format('Y-m-d') : '') }}" class="form-control form-control-sm" {{ $id != 0 ? 'disabled' : '' }}>
                     </div>
                     <div class="col-md-2">
                         <label for="time">Time of Departure <span class="text-danger">*</span> <i class="text-danger font-weight-bold">{{ $errors->first('time') }}</i></label>
@@ -64,7 +64,7 @@
                             <select name="vtype_id" id="vtype_id" class="form-control" data-placeholder="Vehicle Type">
                                 <option disabled selected value> --Select Vehicle Type-- </option>
                                 @foreach($types as $type)
-                                    <option value="{{ $type->vtype_id }}" >{{ $type->name }}</option>
+                                    <option value="{{ $type->vtype_id }}" {{ old('type_id', $r->vtype_id) == $type->vtype_id ? 'selected' : '' }} >{{ $type->name }}</option>
                                 @endforeach
                             </select>
                         </div>

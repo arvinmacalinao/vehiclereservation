@@ -6,6 +6,7 @@ use View;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Group;
+use App\Models\UserRole;
 use App\Models\UserGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -105,7 +106,7 @@ class UserController extends Controller
         return view('pages.users.form', compact('msg', 'id', 'user', 'groups', 'roles'));
     }
 
-    public function delete(Request $request, $id)
+    public function destroy(Request $request, $id)
     {
         $user = User::where('u_id', $id)->first();
         if(!$user) {
@@ -142,5 +143,25 @@ class UserController extends Controller
             $request->session()->put('session_msg', 'Account Enabled!');
             return redirect(route('user.lists'));
         }      
+    }
+
+    public function profile(Request $request, $id)
+    {
+        $msg            = $request->session()->pull('session_msg', '');
+        $auth_id        = Auth::id();
+        $user_role      = UserRole::where('u_id', $auth_id)->first();
+        $user_group     = UserGroup::where('u_id', $auth_id)->first();
+
+        $groups         = Group::where('g_id', $user_group->g_id)->value('name');
+
+        $roles          = Role::where('role_id', $user_role->role_id)->value('name');
+
+        $user = User::where('u_id', $auth_id)->first();
+        
+        if(!$user) {
+            $request->session()->put('session_msg', 'Record not found!');
+            return redirect(route('user.lists'));
+        }
+        return view('pages.users.profile', compact('msg', 'id', 'user', 'groups', 'roles'));
     }
 }

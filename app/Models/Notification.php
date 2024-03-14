@@ -9,7 +9,7 @@ class Notification extends Model
 {
     protected $table        = 'notifications';
     protected $primaryKey   = 'not_id';
-    protected $fillable     = [ 'not_message', 'r_id', 'u_id', 'read_at', 'created_at', 'updated_at' ];
+    protected $fillable     = [ 'not_message', 'r_id', 'u_id', 'new_user_id', 'app_id', 'read_at', 'created_at', 'updated_at' ];
     protected $timestamp    = [ 'read_at', 'created_at', 'created_at' ];
     
     

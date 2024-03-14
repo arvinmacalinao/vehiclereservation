@@ -30,8 +30,18 @@ class NotificationController extends Controller
     {
         $msg            = $request->session()->pull('session_msg', '');
 
-        $rows           = Notification::paginate(20);
+        $rows           = Notification::where('u_id', Auth::id('u_id'))->paginate(20);
 
         return view('pages.notifications.index', compact('rows', 'msg'));
+    }
+
+    public function markSingleAsRead(Notification $notification)
+    {
+        // Check if the notification is unread before marking it as read
+        if (!$notification->read_at) {
+            $notification->update(['read_at' => now()]);
+        }
+
+        return redirect()->back()->with('success', 'Notification marked as read');
     }
 }

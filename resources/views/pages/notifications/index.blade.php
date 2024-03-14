@@ -63,11 +63,17 @@
                     <td>{{ $row->created_at }}</td>
                     <td>{{ $row->updated_at }}</td>
                     <td  class="project-actions text-right">
-                        <a class="btn btn-primary btn-sm" href="#"><i class="fas fa-folder"></i>View</a>
-                        {{-- {{ route('driver.edit', ['id' => $row->d_id]) }} --}}
-                        {{-- {{ route('driver.delete', ['id' => $row->d_id]) }} --}}
-                        <a class="btn btn-success btn-sm" href=""><i class="fas fa-pencil-alt"></i>Edit</a>
-                        <a class="btn btn-danger btn-sm  row-delete-btn" href="" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete"><i class="fas fa-trash"></i>Delete</a>
+                      @if($row->app_id != null)
+                      @php
+                        $r_id =  App\Models\Approval::where('app_id', $row->app_id)->value('r_id');
+                      @endphp
+                        <a class="btn btn-primary btn-sm approve_btn" href="{{ route('reservation.view', ['id' => $r_id, 'app_id' => $row->app_id]) }}"><i class="fas fa-folder"></i> View Approval</a>
+                      @elseif($row->new_user_id != null)
+                        <a class="btn btn-primary btn-sm newuser_btn" href="{{ route('user.profile', ['id' => $row->new_user_id]) }}"><i class="fas fa-folder"></i> View New User</a>
+                      @elseif($row->r_id != null)
+                        <a class="btn btn-primary btn-sm reservation_btn" href="{{ route('reservation.view.view', ['id' => $row->r_id]) }}"><i class="fas fa-folder"></i> View Reservation</a>
+                      @endif
+                        <a class="btn btn-info btn-sm  row-delete-btn" href="{{ route('mark-single-as-read', ['notification' => $row]) }}" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete"><i class="fas fa-check"></i> Mark as Read</a>
                     </td>
                 </tr>
             </tbody>

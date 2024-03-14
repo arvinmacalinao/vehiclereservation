@@ -68,13 +68,7 @@
                     <td>{{ $row->created_at }}</td>
                     <td>{{ $row->updated_at }}</td>
                     <td  class="project-actions text-right">
-                        <a class="btn btn-primary btn-sm" href="#">
-                            <i class="fas fa-folder">
-                            </i>
-                            View
-                        </a>
-                        {{-- {{ route('driver.edit', ['id' => $row->d_id]) }} --}}
-                        <a class="btn btn-success btn-sm" href="">
+                        <a class="btn btn-success btn-sm" href=" {{ route('role.edit', ['id' => $row->role_id]) }}">
                             <i class="fas fa-pencil-alt">
                             </i>
                             Edit

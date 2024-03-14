@@ -73,9 +73,11 @@
                       @if($row->status_id == 1)
                         <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-title="Pending"> Pending</i>
                       @elseif($row->status_id == 2)
-                        <i class="fa fa-check-circle text-success" data-toggle="tooltip" data-title="Pending"> Approved</i>
+                        <i class="fa fa-check-circle text-success" data-toggle="tooltip" data-title="Pending"> Approved<br>
+                          <small>by: {{ $row->user->first_name }}</small><br></i>
                       @elseif($row->status_id == 3)
-                      <i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-title="Pending"> Disapproved</i>
+                      <i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-title="Pending"> Disapproved</i><br>
+                      <small>by: {{ $row->user->first_name }}</small><br></i>
                       @endif
                     </td>
                     <th>{{ $row->remarks }}</th>
@@ -85,13 +87,13 @@
                             </i>
                             View
                         </a>
-                        {{-- {{ route('driver.edit', ['id' => $row->d_id]) }} --}}
-                        {{-- {{ route('driver.delete', ['id' => $row->d_id]) }} --}}
+                        @if($row->status_id != 2)
                         <a class="btn btn-success btn-sm" href="{{ route('approval.approve', ['id' => $row->app_id]) }}">
                             <i class="fa fa-thumbs-up">
                             </i>
                             Approve
                         </a>
+                        @endif
                         <a class="btn btn-danger btn-sm  row-delete-btn" href="{{ route('approval.disapprove', ['id' => $row->app_id]) }}"  title="Disapproved">
                             <i class="fas fa-thumbs-down">
                             </i>

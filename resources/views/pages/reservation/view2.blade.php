@@ -30,69 +30,14 @@
     <div class="card-body">
         <div class="row align-items-center">
             <div class="col-8">
-            
             </div>
             <div class="col-4 text-right mb-2">
-              @if (!$r->approvals || $r->approvals->where('status_id', '2')->isEmpty())
-              <form action="{{ route('approval.approve', ['id' => $app_id]) }}" method="post" style="display: inline;">
-                  @csrf
-                  <button type="submit" class="btn btn-success btn-sm" title="Approve"><span class="fa fa-thumbs-up"></span> Approve</button>
-              </form>
-              @endif
                 <a class="btn btn-primary btn-sm" href="{{ url()->previous() }}" title="Back"><span class="fa fa-caret-left"></span> Back</a>
             </div>
             <div class="border-bottom mt-0 mb-2"></div>
         </div>
         <div>
-          <input type="hidden" name="app_id" value="{{ $app_id }}">
-              @php
-                // Get the authenticated user
-                $user = auth()->user();
-                // Check if the user belongs to the RDU group
-                $belongsToRDUGroup = $user->user_groups()->where('g_id', 3)->exists();
-              @endphp
-              @if ($belongsToRDUGroup)
-                <form action="{{ route('approval.approve', ['id' => $app_id]) }}" method="post" style="display: inline;">
-                    @csrf
-                    <div class="card border-primary mb-3" style="">
-                      <div class="card-header">Assign Vehicle and Driver</div>
-                      <div class="card-body">
-                        <form>
-                          <div class="form-group">
-                            <label for="v_id">Select Vehicle</label>
-                            <select name="v_id" id="v_id" class="form-control">
-                                <option value="">-- Select Vehicle --</option>
-                                @foreach($availableVehicles as $vehicle)
-                                    <option value="{{ $vehicle->v_id }}">{{ $vehicle->equipment_name }}</option>
-                                @endforeach
-                            </select>
-                          </div>
-                          <div class="form-group">
-                            <label for="d_id">Select Driver</label>
-                            <select name="name" id="d_id" class="form-control">
-                                <option value="">-- Select Driver --</option>
-                                @foreach($availableDrivers as $driver)
-                                    <option value="{{ $driver->d_id }}">{{ $driver->name }}</option>
-                                @endforeach
-                            </select>
-                          </div>
-                        </form>
-                      </div>
-                      <button type="submit" class="btn btn-success btn-sm" title="Approve"><span class="fa fa-thumbs-up"></span> Submit and Approve</button>
-                    </div>
-                </form>
-              @endif
-            <div class="form-group row">
-            @if($r->status == 1)
-              <div class="col-md-6">
-                <label for="start_date">Assigned Vehicle</label>
-                <input type="text" class="form-control form-control-sm" value="{{ $r->vehicle->equipment_name }}" readonly>
-            </div>
-            <div class="col-md-6">
-                <label for="end_date">Assigned Driver</label>
-                <input type="text" class="form-control form-control-sm" value="{{ $r->driver->name ?? '' }}" readonly>
-            </div>
-            @endif
+          <div class="form-group row">
             <div class="col-md-2">
                 <label for="start_date">Start Date</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $r->start_date }}" readonly>

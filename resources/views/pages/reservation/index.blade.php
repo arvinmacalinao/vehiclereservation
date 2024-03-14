@@ -58,7 +58,7 @@
                     <th class="text-center" width="30%">Status</th>
                     <th class="text-center">Created By</th>
                     <th class="text-center">Created At</th>
-                    <th class="text-right" style="width:20%">Action</th>
+                    <th class="text-center" width="30%">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -80,32 +80,34 @@
                                 @if(!$approval->u_id == null)
                                 <small>
                                     {!! $approval->user->full_initials !!}:
-                                    {!! $approval->status_id == 1 ? '<i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i>' : ($approval->status_id == 2 ? '<i class="fa fa-check-circle text-success" data-toggle="tooltip" data-placement="top" title="Approved"></i>' : '<i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Disapproved"></i>') !!}<br>
-                                    {!! $approval->created_at->format('F d, Y h:i A') !!}
+                                    {!! $approval->status_id == null ? '<i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i>' : ($approval->status_id == 2 ? '<i class="fa fa-check-circle text-success" data-toggle="tooltip" data-placement="top" title="Approved"></i>' : '<i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Disapproved"></i>') !!}<br>
+                                    {!! $approval->created_at->format('F d, Y h:i A') ?? '' !!}
                                 </small><br>
+                                @else
+                                    <small>RDU Approval: <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i></small>
                                 @endif
-                        @endforeach
-                        {{-- @else
-                        	@if($approvals->is_active == 1) {!! getStatus($approvals) !!} @else <i><small class="font-weight-bold text-danger">CANCELLED</small></i> @endif --}}
+                            @endforeach
                         @endif
                     </td>                
-                    <td class="text-center text-nowrap">{!! $row->user->FullName !!}</td>
-                    <td class="text-center text-nowrap">{!! $row->created_at->format('F d, Y') !!}</td>
-                    <td  class="project-actions text-right">
-                        <a class="btn btn-primary btn-sm" href="#">
+                    <td class="text-center text-nowrap">{{ $row->user->FullName ?? '' }}</td>
+                    <td class="text-center text-nowrap">{{ \Carbon\Carbon::parse($row->created_at)->format('Y-m-d') }}</td>
+                    <td  class="text-right">
+                        <a class="btn btn-primary btn-sm" href="{{ route('reservation.view.view', ['id' => $row->r_id]) }}">
                             <i class="fas fa-folder">
                             </i>
                             View
                         </a>
-                        <a class="btn btn-success btn-sm" href="">
+                        @if(!$row->approvals()->where('status_id', 2)->exists())
+                        <a class="btn btn-success btn-sm" href="{{ route('reservation.edit', ['id' => $row->r_id]) }}">
                             <i class="fas fa-pencil-alt">
                             </i>
                             Edit
                         </a>
-                        <a class="btn btn-danger btn-sm  row-delete-btn" href="" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete">
-                            <i class="fas fa-trash">
+                        @endif
+                        <a class="btn btn-danger btn-sm  row-delete-btn" href="{{ route('reservation.delete', ['id' => $row->r_id]) }}" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Cancel">
+                            <i class="fas fa-times">
                             </i>
-                            Delete
+                            Cancel
                         </a>
                     </td>
                 </tr>

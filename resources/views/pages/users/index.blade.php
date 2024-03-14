@@ -68,7 +68,7 @@
                     <td>{{ $row->created_at }}</td>
                     <td>{{ $row->updated_at }}</td>
                     <td  class="project-actions text-right">
-                        <a class="btn btn-primary btn-sm" href="#">
+                        <a class="btn btn-primary btn-sm" href="{{ route('user.profile', ['id' => $row->u_id ]) }}">
                             <i class="fas fa-folder">
                             </i>
                             View
@@ -78,8 +78,7 @@
                             </i>
                             Edit
                         </a>
-                        {{-- {{ route('driver.delete', ['id' => $row->d_id]) }} --}}
-                        <a class="btn btn-danger btn-sm  row-delete-btn" href="" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete">
+                        <a class="btn btn-danger btn-sm  row-delete-btn" href="{{ route('user.delete', ['id' => $row->u_id]) }}" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete">
                             <i class="fas fa-trash">
                             </i>
                             Delete

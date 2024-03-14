@@ -16,7 +16,7 @@ class CreateNotificationsTable extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id('not_id');
             $table->string('not_message');
-            $table->unsignedInteger('u_id')->nullable();
+            $table->unsignedBigInteger('u_id')->nullable();
             $table->unsignedBigInteger('r_id')->nullable();
             $table->timestamp('read_at')->nullable();
             // Define foreign key constraints (if needed)
