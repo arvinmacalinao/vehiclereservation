@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Group;
 use App\Models\UserRole;
 use App\Models\UserGroup;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,7 @@ class UserController extends Controller
     {
         $msg        = $request->session()->pull('session_msg', '');
 
-        $rows       = User::paginate(20);
+        $rows       = User::where('u_id', '!=', 1)->paginate(20);
        
         return view('pages.users.index', compact('rows', 'msg'));
     }
@@ -101,7 +102,7 @@ class UserController extends Controller
         // dd($ugroup_id);
         if(!$user) {
             $request->session()->put('session_msg', 'Record not found!');
-            return redirect(route('user.lists'));
+            return redirect(route('user.index'));
         }
         return view('pages.users.form', compact('msg', 'id', 'user', 'groups', 'roles'));
     }
@@ -113,6 +114,15 @@ class UserController extends Controller
             $request->session()->put('session_msg', 'Record not found!');
             return redirect(route('user.index'));
         } else {
+            $delete_notif = Notification::where('new_user_id', $id)->first();
+            $delete_notif->delete();
+
+            $delete_usergroup = UserGroup::where('u_id', $id)->first();
+            $delete_usergroup->delete();
+
+            $delete_userrole = UserRole::where('u_id', $id)->first();
+            $delete_userrole->delete();
+
             $user->delete();
             $request->session()->put('session_msg', 'Record deleted!');
             return redirect(route('user.index'));
@@ -124,11 +134,11 @@ class UserController extends Controller
         $user = User::where('u_id', $id)->first();
         if(!$user) {
             $request->session()->put('session_msg', 'Record not found!');
-            return redirect(route('user.lists'));
+            return redirect(route('user.index'));
         } else {
             $user->update(['u_enabled' => '0']);
             $request->session()->put('session_msg', 'Account Disabled!');
-            return redirect(route('user.lists'));
+            return redirect(route('user.index'));
         }      
     }
 
@@ -137,11 +147,11 @@ class UserController extends Controller
         $user = User::where('u_id', $id)->first();
         if(!$user) {
             $request->session()->put('session_msg', 'Record not found!');
-            return redirect(route('user.lists'));
+            return redirect(route('user.index'));
         } else {
             $user->update(['u_enabled' => '1']);
             $request->session()->put('session_msg', 'Account Enabled!');
-            return redirect(route('user.lists'));
+            return redirect(route('user.index'));
         }      
     }
 
@@ -156,11 +166,11 @@ class UserController extends Controller
 
         $roles          = Role::where('role_id', $user_role->role_id)->value('name');
 
-        $user = User::where('u_id', $auth_id)->first();
+        $user = User::where('u_id', $id)->first();
         
         if(!$user) {
             $request->session()->put('session_msg', 'Record not found!');
-            return redirect(route('user.lists'));
+            return redirect(route('user.index'));
         }
         return view('pages.users.profile', compact('msg', 'id', 'user', 'groups', 'roles'));
     }

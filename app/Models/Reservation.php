@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Models\User;
+use App\Models\Driver;
 use App\Models\Vehicle;
 use App\Models\Approval;
 use App\Models\VehicleType;
 use App\Models\ApprovalStatus;
+use App\Models\ReservationStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,10 +19,9 @@ class Reservation extends Model
 
     protected $table        = 'reservations';
     protected $primaryKey   = 'r_id';
-    protected $fillable = [
-        'u_id', 'v_id', 'driver_name', 'purpose', 'destination', 'start_date', 'end_date', 'time', 'vtype_id', 'passenger',
-        'remarks', 'others', 'requested_by', 'status', 'recommending', 'approval', 'status_by', 'recommending_by',
-        'approval_by', 'is_active', 'is_read', 'is_printed', 'deleted_at', 'created_at', 'updated_at'
+    protected $fillable = [ 'u_id', 'v_id', 'driver_name', 'purpose', 'destination', 'start_date', 
+    'end_date', 'time', 'end_time', 'vtype_id', 'remarks', 'passenger', 'requested_by', 'status_id', 
+    'deleted_at', 'created_at', 'updated_at'
     ];
 
     public function passengers()
@@ -56,12 +57,27 @@ class Reservation extends Model
     }
 
     public function type()
-    {
+    {                           
         return $this->belongsTo(VehicleType::class, 'vtype_id', 'vtype_id');
     }
 
     public function vehicle()
     {
         return $this->belongsTo(Vehicle::class, 'v_id', 'v_id');
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class, 'driver_name', 'd_id');
+    }
+
+    public function vehicle_type()
+    {
+        return $this->belongsTo(VehicleType::class, 'vtype_id', 'vtype_id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(ReservationStatus::class, 'status_id', 'id' );
     }
 }

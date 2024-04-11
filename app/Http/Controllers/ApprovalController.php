@@ -74,11 +74,11 @@ class ApprovalController extends Controller
 
         }else{
             // Check if both vehicle_id and driver_id are not null
-            if (request('v_id') && request('name')) {
+            if (request('v_id') && request('driver_id')) {
                 // Update the status
                 $reservation->v_id = request('v_id');
-                $reservation->driver_name = request('name');
-                $reservation->status = 1;
+                $reservation->driver_id = request('driver_id');
+                $reservation->status_id = 1;
                 $reservation->save();
                 // Other logic after approval...
 

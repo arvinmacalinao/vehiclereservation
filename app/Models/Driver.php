@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\User;
+use App\Models\UserRole;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Driver extends Model
-{
-    use SoftDeletes;
+class Driver extends User
+{   
+    protected $table = 'users';
 
-    protected $table        = 'drivers';
-    protected $primaryKey   = 'd_id';
-    protected $fillable = [
-        'name', 'created_at', 'updated_at',
-    ];
+    public function role()
+    {
+        return $this->hasOne(UserRole::class, 'u_id', 'u_id');
+    }
 }

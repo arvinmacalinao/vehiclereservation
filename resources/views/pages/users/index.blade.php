@@ -18,15 +18,6 @@
     <!-- End -->
       <div class="card-header">
         <h3 class="card-title">{{ $data['page'] }}</h3>
-
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
       </div>
       <div class="card-body p-0">
         <div class="row">
@@ -51,9 +42,12 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>created_at</th>
-                    <th>updated_at</th>
+                    <th width="20%">Name</th>
+                    <th>Designation</th>
+                    <th>Role</th>
+                    <th>Username</th>
+                    <th>Date Registered</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -65,24 +59,39 @@
                 <tr>
                     <td>{{ $ctr++ }}</td>
                     <td>{{ $row->fullName }}</td>
+                    <td>
+                        @php
+                        $userGroupId = App\Models\UserGroup::where('u_id', $row->u_id)->pluck('g_id')->first();
+                        $alias = App\Models\Group::where('g_id', $userGroupId)->value('alias');
+                        @endphp
+                        {{ $alias ?? '-' }}
+                    </td>
+                    <td>
+                        @php
+                        $userGroupId = App\Models\UserRole::where('u_id', $row->u_id)->pluck('role_id')->first();
+                        $role = App\Models\Role::where('role_id', $userGroupId)->value('name');
+                        @endphp
+                        {{ $role ?? '-' }}
+                    </td>
+                    <td>
+                        {{ $row->username }}</td>
                     <td>{{ $row->created_at }}</td>
-                    <td>{{ $row->updated_at }}</td>
-                    <td  class="project-actions text-right">
+                    <td  class="project-actions text-left">
                         <a class="btn btn-primary btn-sm" href="{{ route('user.profile', ['id' => $row->u_id ]) }}">
                             <i class="fas fa-folder">
                             </i>
                             View
                         </a>
-                        <a class="btn btn-success btn-sm" href="{{ route('user.edit', ['id' => $row->u_id]) }}">
+                        <a class="btn btn-info btn-sm" href="{{ route('user.edit', ['id' => $row->u_id]) }}">
                             <i class="fas fa-pencil-alt">
                             </i>
                             Edit
                         </a>
-                        <a class="btn btn-danger btn-sm  row-delete-btn" href="{{ route('user.delete', ['id' => $row->u_id]) }}" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete">
-                            <i class="fas fa-trash">
-                            </i>
-                            Delete
-                        </a>
+                        @if($row->u_enabled == 0)
+                            <a class="btn btn-success btn-sm text-light" href="{{ route('user.enable', ['id' => $row->u_id]) }}" title="Enable"><i class="far fa-check-circle"></i> Enable</a>
+                        @else
+                            <a class="btn btn-warning btn-sm text-light" href="{{ route('user.disable', ['id' => $row->u_id]) }}" title="Disable"><i class="fa fa-ban"></i> Disable</a>
+                        @endif
                     </td>
                 </tr>
             </tbody>

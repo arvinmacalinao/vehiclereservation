@@ -14,14 +14,6 @@
         @else
         <h3 class="card-title">Update {{ $data['page'] }} Record</h3>
         @endif
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
       </div>
       <div class="card-body p-0">
         <!-- This will display any message upon submission. -->
@@ -133,6 +125,20 @@
                         </div>
                         <div class="col-md-8">
                         </div>
+                        @php
+                            // Get the authenticated user's ID
+                            $userId = auth()->id();
+
+                            // Get the user's roles
+                            $userRoles = App\Models\UserRole::where('u_id', $userId)->pluck('role_id');
+
+                            // Get the role names associated with the user's roles
+                            $roleNames = App\Models\Role::whereIn('role_id', $userRoles)->pluck('name');
+
+                            // Check if the user has the SUPERADMIN role
+                            $hasSuperAdminRole = $roleNames->contains('SUPERADMIN');
+                        @endphp        
+                        @if ($hasSuperAdminRole)
                         <div class="col-md-2">
                             <div class="form-group ml-2">
                               <div class="checkbox">
@@ -141,15 +147,8 @@
                               </div>
                             </div>
                         </div>
+                        @endif
                         <div class="col-md-2">
-                                {{-- @if(auth()->user()->u_is_superadmin == 1)
-                                    <div class="form-group ml-2">
-                                        <div class="checkbox">
-                                            <input class="mr-3 mt-1 text-center" type="checkbox" value="1" name="u_is_superadmin" id="u_is_superadmin"{{ (old('u_is_superadmin', optional($user)->u_is_superadmin) == 1) ? ' checked="checked"' : '' }}>
-                                            <label class="form-check-label fw-bold" for="u_is_superadmin">Is Superadmin</label>
-                                        </div>
-                                    </div>
-                                @endif --}}
                         </div>
                     </div>
                     <br>

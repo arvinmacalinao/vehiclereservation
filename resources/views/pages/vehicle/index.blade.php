@@ -18,15 +18,6 @@
     <!-- End -->
       <div class="card-header">
         <h3 class="card-title">{{ $data['page'] }}</h3>
-
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
       </div>
       <div class="card-body p-0">
         <div class="row">
@@ -52,10 +43,8 @@
                 <tr>
                     <th>#</th>
                     <th>Plate Number</th>
-                    <th>Equipment Name</th>
-                    <th>Code Number</th>
-                    <th>Model Number</th>
                     <th>Vehicle Type</th>
+                    <th>Status</th>
                     <th></th>
                 </tr>
             </thead>
@@ -68,12 +57,14 @@
                 <tr>
                     <td>{{ $ctr++ }}</td>
                     <td>{{ $row->plate_number }}</td>
-                    <td>{{ $row->plate_number }}</td>
-                    <td>{{ $row->plate_number }}</td>
-                    <td>{{ $row->model_number }}</td>
-                    <td>{{ $row->vehicle_type }}</td>
-                    <td>{{ $row->remarks }}</td>
+                    <td>{{ $row->type->name ?? '' }}</td>
+                    <td>{{ $row->status->name ?? '' }}</td>
                     <td  class="project-actions text-right">
+                        <a class="btn btn-info btn-sm" href="{{ route('vehicle.schedule', ['id' => $row->v_id]) }}">
+                            <i class="fas fa-calendar">
+                            </i>
+                            View Schedule
+                        </a>
                         <a class="btn btn-success btn-sm" href="{{ route('vehicle.edit', ['id' => $row->v_id]) }}">
                             <i class="fas fa-pencil-alt">
                             </i>

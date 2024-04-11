@@ -45,7 +45,7 @@
                     <th>Date of Travel</th> 
                     <th class="text-nowrap">Plate Number</th>
                     <th class="text-nowrap">Driver</th>
-                    <th class="text-nowrap" width="30%">Destination</th>
+                    <th class="text-nowrap">Destination</th>
                     <th class="text-center" width="30%">Status</th>
                     <th class="text-center">Created By</th>
                     <th class="text-center">Created At</th>
@@ -61,51 +61,28 @@
                 <tr>
                     <td>{{ $ctr++ }}</td>
                     <td class="text-nowrap"><div>{!! $row->reservation_dates !!}</div></td>
-                    <td>{{ $row->vehicle->equipment_name ?? '-' }}</td>
+                    <td></td>
                     {{-- <a class="text-primary" data-toggle="tooltip" data-placement="left" title="{{ $reservation->passenger_names() }}" href="#">{{ $reservation->vehicle == null ? '' : $reservation->vehicle->plate_number }}</a> --}}
-                    <td class="text-nowrap">{!! $row->driver->name ?? '-' !!}</td>
-                    <td class="w-30 mw-0 long-text"><a class="text-primary" data-placement="left" data-toggle="tooltip" data-placement="top" title="{{ $row->purpose }}" href="#">{!! nl2br($row->destination) !!}</a></td> 
+                    <td class="text-nowrap">{!! $row->driver_id !!}</td>
+                    <td class="w-50 mw-0 long-text"><a class="text-primary" data-placement="left" data-toggle="tooltip" data-placement="top" title="{{ $row->purpose }}" href="#">{!! nl2br($row->destination) !!}</a></td> 
                     <td class="text-center">
-                    @if($row->status_id == 3)
-                        <small><i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Cancelled"></i>Cancelled</small>
-                    @else
-                        @php
-                            $res_ug_id      = \App\Models\UserGroup::where('u_id', $row->u_id)->value('g_id');
-                            $ug_approval    = \App\Models\Approval::where('g_id', $res_ug_id)->where('r_id', $row->r_id)->first();
-
-                            $rdu_approval   = \App\Models\Approval::where('g_id', 3)->where('r_id', $row->r_id)->first();
-                        @endphp
-                        @if($ug_approval->status_id == 1)
-                            <small>For Supervisor Approval: <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i></small><br>
-                        @elseif($ug_approval->status_id == 4)
-                            <small>For Supervisor Approval: <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i></small><br>
-                        @else
-                        <small>
-                            Approved by: {!! $ug_approval->user->last_name !!}:
-                            {!! $ug_approval->status_id == null ? '<i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i>' : ($ug_approval->status_id == 2 ? '<i class="fa fa-check-circle text-success" data-toggle="tooltip" data-placement="top" title="Approved"></i>' : '<i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Disapproved"></i>') !!}
-                            {!! $ug_approval->created_at->format('F d, Y h:i A') ?? '' !!}
-                            <br>
-                        </small>
-                        @endif   
-                        @if(!$rdu_approval)
-                            <small>For RDU Approval: <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i></small>
-                        @elseif($rdu_approval->status_id == 1)
-                            <small>For RDU Approval: <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i></small>
-                        @elseif($rdu_approval->status_id == 2)
-                        <small>
-                            Approved by: {!! $rdu_approval->user->last_name !!}:
-                            {!! $rdu_approval->status_id == null ? '<i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i>' : ($rdu_approval->status_id == 2 ? '<i class="fa fa-check-circle text-success" data-toggle="tooltip" data-placement="top" title="Approved"></i>' : '<i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Disapproved"></i>') !!}
-                            {!! $rdu_approval->created_at->format('F d, Y h:i A') ?? '' !!}
-                        </small>
-                        @endif
+                        @if(count($row->approvals))
+                            @foreach($row->approvals as $approval)
+                                @if(!$approval->u_id == null)
+                                <small>
+                                    {!! $approval->user->full_initials !!}:
+                                    {!! $approval->status_id == null ? '<i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i>' : ($approval->status_id == 2 ? '<i class="fa fa-check-circle text-success" data-toggle="tooltip" data-placement="top" title="Approved"></i>' : '<i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Disapproved"></i>') !!}<br>
+                                    {!! $approval->created_at->format('F d, Y h:i A') ?? '' !!}
+                                </small><br>
+                                @else
+                                    <small>RDU Approval: <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i></small>
+                                @endif
+                            @endforeach
                         @endif
                     </td>                
                     <td class="text-center text-nowrap">{{ $row->user->FullName ?? '' }}</td>
                     <td class="text-center text-nowrap">{{ \Carbon\Carbon::parse($row->created_at)->format('Y-m-d') }}</td>
                     <td  class="text-right">
-                        @if($row->status_id == 3)
-                        
-                        @else
                         <a class="btn btn-primary btn-sm" href="{{ route('reservation.view.view', ['id' => $row->r_id]) }}">
                             <i class="fas fa-folder">
                             </i>
@@ -118,13 +95,11 @@
                             Edit
                         </a>
                         @endif
-                        
-                        <a class="btn btn-danger btn-sm  row-delete-btn" href="{{ route('reservation.cancel', ['id' => $row->r_id]) }}" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Cancel">
+                        <a class="btn btn-danger btn-sm  row-delete-btn" href="{{ route('reservation.delete', ['id' => $row->r_id]) }}" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Cancel">
                             <i class="fas fa-times">
                             </i>
                             Cancel
                         </a>
-                        @endif
                     </td>
                 </tr>
             </tbody>

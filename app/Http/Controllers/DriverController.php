@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use View;
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,8 +32,12 @@ class DriverController extends Controller
     {
         $msg            = $request->session()->pull('session_msg', '');
 
-        $rows           = Driver::paginate(20);
-
+        $rows = Driver::whereHas('role', function ($query) {
+            $query->whereHas('roles', function ($query) {
+                $query->where('name', 'DRIVER');
+            });
+        })->paginate(20);
+            
         return view('pages.driver.index', compact('rows', 'msg'));
     }
     

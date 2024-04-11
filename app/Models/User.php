@@ -126,4 +126,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserRole::class, 'u_id', 'role_id');
     }
+
+    public function roless()
+    {
+        return $this->hasOne(UserRole::class, 'u_id', 'u_id');
+    }
+
+    public function rolesss()
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'role_id');
+    }
+    
+    
 }

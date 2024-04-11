@@ -18,15 +18,6 @@
     <!-- End -->
       <div class="card-header">
         <h3 class="card-title">{{ $data['page'] }}</h3>
-
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
       </div>
       <div class="card-body p-0">
         <div class="row">
@@ -78,16 +69,19 @@
                       @elseif($row->status_id == 3)
                       <i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-title="Pending"> Disapproved</i><br>
                       <small>by: {{ $row->user->first_name }}</small><br></i>
+                      @else
+                      <i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-title="Pending"> Cancelled</i><br>
                       @endif
                     </td>
                     <th>{{ $row->remarks }}</th>
                     <td  class="project-actions text-right">
+                    @if($row->status_id != 4)
                         <a class="btn btn-primary btn-sm" href="{{ route('reservation.view', ['id' => $row->r_id, 'app_id' => $row->app_id]) }}">
                             <i class="fas fa-folder">
                             </i>
                             View
                         </a>
-                        @if($row->status_id != 2)
+                        @if($row->status_id == 1)
                         <a class="btn btn-success btn-sm" href="{{ route('approval.approve', ['id' => $row->app_id]) }}">
                             <i class="fa fa-thumbs-up">
                             </i>
@@ -99,6 +93,7 @@
                             </i>
                             Disapproved
                         </a>
+                    @endif
                     </td>
                 </tr>
             </tbody>

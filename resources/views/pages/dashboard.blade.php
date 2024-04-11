@@ -102,6 +102,7 @@
                 reservationInfo += '<b>Driver:</b> ' + info.event.extendedProps.driver + '<br>';
                 reservationInfo += '<b>Vehicle:</b> ' + info.event.extendedProps.vehicle + '<br>';
                 reservationInfo += '<b>Destination:</b> ' + info.event.extendedProps.destination + '<br>';
+                reservationInfo += '<b>Status:</b> ' + info.event.extendedProps.status + '<br>';
                 
                 // Convert time format from '19:47' to '7:47 PM'
                 var timeParts = info.event.extendedProps.time.split(':');

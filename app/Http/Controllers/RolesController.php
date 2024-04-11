@@ -104,8 +104,7 @@ class RolesController extends Controller
             $request->session()->put('session_msg', 'Record not found!');
             return redirect(route('role.index'));
         } else {
-            $role->deleted_at = Carbon::now();
-            $role->update();
+            $role->delete();
 
             $request->session()->put('session_msg', 'Record deleted!');
             return redirect(route('role.index'));

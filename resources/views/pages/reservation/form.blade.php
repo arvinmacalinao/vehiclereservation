@@ -14,14 +14,6 @@
         @else
         <h3 class="card-title">Update {{ $data['page'] }} Record</h3>
         @endif
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
       </div>
       <div class="card-body p-0">
         <!-- This will display any message upon submission. -->
@@ -58,7 +50,11 @@
                         <label for="time">Time of Departure <span class="text-danger">*</span> <i class="text-danger font-weight-bold">{{ $errors->first('time') }}</i></label>
                         <input type="time" name="time" value="{{ old('time', $r->time) }}" id="time" class="form-control form-control-sm">
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
+                        <label for="end_time">Time of Arrival (Office) <span class="text-danger">*</span> <i class="text-danger font-weight-bold">{{ $errors->first('end_time') }}</i></label>
+                        <input type="time" name="end_time" value="{{ old('end_time', $r->end_time) }}" id="end_time" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-2">
                         <div class="form-group">
                             <label for="vtype_id">Select Vehicle Type<span class="text-danger">*</span></label>
                             <select name="vtype_id" id="vtype_id" class="form-control" data-placeholder="Vehicle Type">

@@ -36,7 +36,7 @@ class DashboardController extends Controller
 
         $now = now(); // Get the current date and time
 
-        $reservations = Reservation::where('status', '1')->get();
+        $reservations = Reservation::where('status_id', '1')->get();
 
         // Format reservation data for FullCalendar
         $events = [];
@@ -47,8 +47,9 @@ class DashboardController extends Controller
                 'time' => $reservation->time,
                 'purpose' => $reservation->purpose,
                 'destination' => $reservation->destination,
-                'driver' => $reservation->driver_name,
-                'vehicle' => $reservation->vehicle->equipment_name,
+                'driver' => $reservation->driver_name ?? 'not set',
+                'vehicle' => $reservation->vehicle->equipment_name ?? 'not set',
+                'status' => $reservation->status->name,
             ];
         }
 

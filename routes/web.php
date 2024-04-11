@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GroupController;
@@ -7,11 +8,11 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ApprovalController;
+use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Middleware\CheckRole;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -49,6 +50,7 @@ Route::get('reservation/add', [ReservationController::class, 'create'])->name('r
 Route::post('reservation/store/{id}', [ReservationController::class, 'store'])->name('reservation.store');
 Route::get('reservation/edit/{id}', [ReservationController::class, 'edit'])->name('reservation.edit');
 Route::get('reservation/delete/{id}', [ReservationController::class, 'destroy'])->name('reservation.delete');
+Route::get('reservation/cancel/{id}', [ReservationController::class, 'cancel'])->name('reservation.cancel');
 Route::get('reservation/view/{id}', [ReservationController::class, 'view'])->name('reservation.view');
 Route::get('reservation/{id}/view', [ReservationController::class, 'view2'])->name('reservation.view.view');
 
@@ -66,14 +68,14 @@ Route::post('vehicles/store/{id}', [VehicleController::class, 'store'])->name('v
 Route::get('vehicles/edit/{id}', [VehicleController::class, 'edit'])->name('vehicle.edit');
 Route::get('vehicles/delete/{id}', [VehicleController::class, 'destroy'])->name('vehicle.delete');
 
+Route::any('vehicle/{id}/schedule', [ScheduleController::class, 'vehicle'])->name('vehicle.schedule');
+
 // Drivers
 Route::any('drivers', [DriverController::class, 'index'])->name('driver.index');
 Route::get('driver/add', [DriverController::class, 'create'])->name('driver.add');
 Route::post('driver/store/{id}', [DriverController::class, 'store'])->name('driver.store');
 Route::get('driver/edit/{id}', [DriverController::class, 'edit'])->name('driver.edit');
 Route::get('driver/delete/{id}', [DriverController::class, 'destroy'])->name('driver.delete');
-
-
 });
 
 Route::middleware(['auth', 'checkRole:MANAGER,SUPERADMIN,SUPERVISOR,VICE PRESIDENT'])->group(function () {
@@ -99,6 +101,8 @@ Route::get('user/add', [UserController::class, 'create'])->name('user.add');
 Route::post('user/store/{id}', [UserController::class, 'store'])->name('user.store');
 Route::get('user/edit/{id}', [UserController::class, 'edit'])->name('user.edit');
 Route::get('user/delete/{id}', [UserController::class, 'destroy'])->name('user.delete');
+Route::get('user/disable/{id}', [UserController::class, 'disable'])->name('user.disable');
+Route::get('user/enable/{id}', [UserController::class, 'enable'])->name('user.enable');
 
 // Roles
 Route::any('roles', [RolesController::class, 'index'])->name('role.index');
@@ -115,3 +119,10 @@ Route::get('group/edit/{id}', [GroupController::class, 'edit'])->name('group.edi
 Route::get('group/delete/{id}', [GroupController::class, 'destroy'])->name('group.delete');
 
 });
+
+Route::middleware(['auth', 'checkRole:SUPERADMIN, DRIVER'])->group(function () {
+    // Routes accessible only to users with the 'admin' role
+    // Driver Listing
+    
+});
+

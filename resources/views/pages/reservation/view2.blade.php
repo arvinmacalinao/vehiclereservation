@@ -10,14 +10,6 @@
     <div class="card">
       <div class="card-header">
         <h3 class="card-title">{{ $data['page'] }} Details</h3>
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
       </div>
       <div class="card-body p-0">
         <!-- This will display any message upon submission. -->
@@ -38,21 +30,38 @@
         </div>
         <div>
           <div class="form-group row">
+            @if($r->status_id == 1)
+              <div class="col-md-6">
+                <label for="start_date">Assigned Vehicle</label>
+                <input type="text" class="form-control form-control-sm" value="{{ $r->vehicle->equipment_name }}" readonly>
+            </div>
+            <div class="col-md-6">
+                <label for="end_date">Assigned Driver</label>
+                @php
+                    $name = App\Models\User::where('u_id', $r->driver_id)->first();
+                @endphp
+                <input type="text" class="form-control form-control-sm" value="{{ $name->fullName ?? '' }}" readonly>
+            </div>
+            @endif
             <div class="col-md-2">
                 <label for="start_date">Start Date</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $r->start_date }}" readonly>
+            </div>
+            <div class="col-md-2">
+                <label for="time">Time of Departure</label>
+                <input type="text" class="form-control form-control-sm" value="{{ $r->time }}" readonly>
             </div>
             <div class="col-md-2">
                 <label for="end_date">End Date</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $r->end_date }}" readonly>
             </div>
             <div class="col-md-2">
-                <label for="time">Time of Departure</label>
-                <input type="text" class="form-control form-control-sm" value="{{ $r->time }}" readonly>
+                <label for="time">Time of Arrival</label>
+                <input type="text" class="form-control form-control-sm" value="{{ $r->end_time }}" readonly>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label for="vtype_id">Select Vehicle Type</label>
-                <input type="text" class="form-control form-control-sm" value="{{ $r->vehicle_type->name ?? '' }}" readonly>
+                <input type="text" class="form-control form-control-sm" value="{{ $r->type->name ?? ''}}" readonly>
             </div>
             <div class="col-md-2">
                 <label for="passenger">No. of Passengers</label>

@@ -7,7 +7,7 @@
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-          <a href="../../index3.html" class="nav-link">Home</a>
+          <a href="{{ route('dashboard') }}" class="nav-link">Home</a>
         </li>
       </ul>
   
@@ -84,6 +84,29 @@
                 </p>
               </a>
             </li>
+            @php
+                // Get the authenticated user's ID
+                $userId = auth()->id();
+                          
+                // Get the user's roles
+                $userRoles = App\Models\UserRole::where('u_id', $userId)->pluck('role_id');
+                          
+                // Get the role names associated with the user's roles
+                $roleNames = App\Models\Role::whereIn('role_id', $userRoles)->pluck('name');
+                          
+                // Check if the user has the SUPERADMIN role
+                $driver = $roleNames->contains('DRIVER');
+            @endphp   
+            @if($driver)
+            <li class="nav-item">
+              <a href="" class="nav-link">
+                <i class="fa-solid fas fa-car-side"></i>
+                <p>
+                  Scheduled Trips
+                </p>
+              </a>
+            </li>
+            @else
             <li class="nav-item">
               <a href="{{ route('reservation.index') }}" class="nav-link">
                 <i class="fa-solid fas fa-car-side"></i>
@@ -100,6 +123,7 @@
                 </p>
               </a>
             </li>
+            @endif
             @php
                 // Get the authenticated user
                 $user = auth()->user();

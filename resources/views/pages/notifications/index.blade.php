@@ -19,13 +19,6 @@
       <div class="card-header">
         <h3 class="card-title">{{ $data['page'] }}</h3>
 
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
         </div>
       </div>
       <div class="card-body p-0">
@@ -41,14 +34,13 @@
             </div>
         </div>
         <hr>
-        
-        <table class="table table-striped projects">
+        <table class="table">
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Notification Message</th>
-                    <th>created_at</th>
-                    <th>updated_at</th>
+                    <th width="60%">Notification Message</th>
+                    <th>Date</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -57,24 +49,25 @@
              ?>
             <tbody>
             @foreach ($rows as $row)
-                <tr>
+              <tr @class(['bg-danger' => $row->read_at == null])>
                     <td>{{ $ctr++ }}</td>
                     <td>{{ $row->not_message }}</td>
                     <td>{{ $row->created_at }}</td>
-                    <td>{{ $row->updated_at }}</td>
-                    <td  class="project-actions text-right">
+                    <td  class="project-actions text-left">
                       @if($row->app_id != null)
                       @php
                         $r_id =  App\Models\Approval::where('app_id', $row->app_id)->value('r_id');
                       @endphp
-                        <a class="btn btn-primary btn-sm approve_btn" href="{{ route('reservation.view', ['id' => $r_id, 'app_id' => $row->app_id]) }}"><i class="fas fa-folder"></i> View Approval</a>
+                        <a class="btn btn-primary btn-sm approve_btn pr-4" href="{{ route('reservation.view', ['id' => $r_id, 'app_id' => $row->app_id]) }}"><i class="fas fa-folder"></i> View Approval</a>
                       @elseif($row->new_user_id != null)
-                        <a class="btn btn-primary btn-sm newuser_btn" href="{{ route('user.profile', ['id' => $row->new_user_id]) }}"><i class="fas fa-folder"></i> View New User</a>
+                        <a class="btn btn-primary btn-sm newuser_btn pr-3" href="{{ route('user.profile', ['id' => $row->new_user_id]) }}"><i class="fas fa-folder"></i> View New User</a>
                       @elseif($row->r_id != null)
                         <a class="btn btn-primary btn-sm reservation_btn" href="{{ route('reservation.view.view', ['id' => $row->r_id]) }}"><i class="fas fa-folder"></i> View Reservation</a>
                       @endif
+                      @if($row->read_at == null)
                         <a class="btn btn-info btn-sm  row-delete-btn" href="{{ route('mark-single-as-read', ['notification' => $row]) }}" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete"><i class="fas fa-check"></i> Mark as Read</a>
-                    </td>
+                      @endif
+                      </td>
                 </tr>
             </tbody>
             @endforeach

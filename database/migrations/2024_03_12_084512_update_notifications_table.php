@@ -15,7 +15,7 @@ class UpdateNotificationsTable extends Migration
     {
         Schema::table('notifications', function (Blueprint $table) {
             // Add new_user_id column
-            $table->unsignedInteger('new_user_id')->nullable()->after('u_id');
+            $table->unsignedBigInteger('new_user_id')->nullable()->after('u_id');
             $table->foreign('new_user_id')->references('u_id')->on('users')->onDelete('cascade');
 
             // Add app_id column

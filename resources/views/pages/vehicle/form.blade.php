@@ -14,14 +14,6 @@
         @else
         <h3 class="card-title">Update {{ $data['page'] }} Record</h3>
         @endif
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-            <i class="fas fa-minus"></i>
-          </button>
-          <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
       </div>
       <div class="card-body p-0">
         <!-- This will display any message upon submission. -->
@@ -45,7 +37,7 @@
             <form method="POST" action="{{ route('vehicle.store', ['id' => $id]) }}">
                 @csrf
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="mb-2">
                             <label class="form-label fw-bold" for="plate_number">Plate Number<span class="text-danger">*</span></label>
                             <input style="text-transform:uppercase" placeholder="Plate Number" class="form-control @error('plate_number') is-invalid @enderror" type="text" maxlength="255" name="plate_number" id="plate_number" value="{{ old('plate_number', $v->plate_number) }}" required>
@@ -61,38 +53,23 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-2">
-                            <label class="form-label fw-bold" for="code_number">Code Number<span class="text-danger">*</span></label>
-                            <input placeholder="Code Number" class="form-control @error('code_number') is-invalid @enderror" type="number" maxlength="255" min="1" name="code_number" id="code_number" value="{{ old('code_number', $v->code_number) }}" required>
-                            <div class="invalid-feedback">@error('code_number') {{ $errors->first('code_number') }} @enderror</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-2">
-                            <label class="form-label fw-bold" for="model_number">Model Number<span class="text-danger">*</span></label>
-                            <input placeholder="Model Number" class="form-control @error('model_number') is-invalid @enderror" type="number" maxlength="255" min="1" name="model_number" id="model_number" value="{{ old('model_number', $v->model_number) }}" required>
-                            <div class="invalid-feedback">@error('model_number') {{ $errors->first('model_number') }} @enderror</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-2">
-                            <label class="form-label fw-bold" for="serial_number">Serial Number<span class="text-danger">*</span></label>
-                            <input placeholder="Serial Number" class="form-control @error('serial_number') is-invalid @enderror" type="number" maxlength="255" min="1" name="serial_number" id="serial_number" value="{{ old('serial_number', $v->serial_number) }}" required>
-                            <div class="invalid-feedback">@error('serial_number') {{ $errors->first('serial_number') }} @enderror</div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-2">
-                            <label class="form-label fw-bold" for="vehicle_type">Vehicle Type</label>
-                            <select class="form-control @error('vehicle_type') is-invalid @enderror" name="vehicle_type" id="vehicle_type" value="{{ old('vehicle_type', $v->vehicle_type) }}">                                
-                                    <option value="Sedan">Sedan</option>
-                                    <option value="Van">Van</option>
-                                    <option value="SUV">SUV</option>
+                            <label class="form-label fw-bold" for="type_id">Vehicle Type</label>
+                            <select name="type_id" id="type_id" class="form-control" data-placeholder="Vehicle Type">
+                                @foreach($types as $type)
+                                    <option value="{{ $type->vtype_id }}" {{ old('type_id', $v->type_id) == $type->vtype_id ? 'selected' : '' }} >{{ $type->name }}</option>
+                                @endforeach
                             </select>
-                            <div class="invalid-feedback">@error('vehicle_type') {{ $errors->first('vehicle_type') }} @enderror</div>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        
+                        <div class="mb-2">
+                            <label class="form-label fw-bold" for="status_id">Vehicle Status</label>
+                            <select name="status_id" id="status_id" class="form-control" data-placeholder="Vehicle Status">
+                                @foreach($statuses as $status)
+                                    <option value="{{ $status->id }}" {{ old('status_id', $v->status_id) == $status->id ? 'selected' : '' }} >{{ $status->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="mb-2">
