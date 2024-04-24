@@ -54,7 +54,7 @@
             @foreach ($rows as $row)
                 <tr>
                     <td>{{ $ctr++ }}</td>
-                    <td><small>Requested by: {{ $row->reservation->user->first_name }}</small><br>
+                    <td><small>Requested by: {{ $row->reservation->user->first_name ?? '' }}</small><br>
                     <small>Date Requested: {{ $row->reservation->start_date }}</small><br>
                     <small>Vehicle Needed: {{ $row->reservation->type->name ?? ''}}</small><br>
                     <small>Destination: {{ $row->reservation->destination }}</small><br>
@@ -62,13 +62,20 @@
                     </td>
                     <td>
                       @if($row->status_id == 1)
-                        <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-title="Pending"> Pending</i>
+                        <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-title="Pending"> 
+                            Pending Approval<br> by:
+                            @if($row->g_id == 3)
+                            <small>{{ $row->group->alias ?? '' }}</small>
+                            </i>
+                            @else
+                            <small>{{ $row->group->alias ?? '' }} Head</small></i>
+                            @endif
                       @elseif($row->status_id == 2)
                         <i class="fa fa-check-circle text-success" data-toggle="tooltip" data-title="Pending"> Approved<br>
-                          <small>by: {{ $row->user->first_name }}</small><br></i>
+                          <small>by: {{ $row->user->first_name ?? '' }}</small><br></i>
                       @elseif($row->status_id == 3)
                       <i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-title="Pending"> Disapproved</i><br>
-                      <small>by: {{ $row->user->first_name }}</small><br></i>
+                      <small>by: {{ $row->user->first_name ?? '' }}</small><br></i>
                       @else
                       <i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-title="Pending"> Cancelled</i><br>
                       @endif
@@ -82,11 +89,20 @@
                             View
                         </a>
                         @if($row->status_id == 1)
+                            @php
+                                // Get the authenticated user
+                                $user = auth()->user();
+
+                                // Check if the user belongs to the RDU group
+                                $belongsToRDUGroup = $user->user_groups()->where('g_id', 3)->exists();
+                            @endphp
+                        @if(!$belongsToRDUGroup)
                         <a class="btn btn-success btn-sm" href="{{ route('approval.approve', ['id' => $row->app_id]) }}">
                             <i class="fa fa-thumbs-up">
                             </i>
                             Approve
                         </a>
+                        @endif
                         @endif
                         <a class="btn btn-danger btn-sm  row-delete-btn" href="{{ route('approval.disapprove', ['id' => $row->app_id]) }}"  title="Disapproved">
                             <i class="fas fa-thumbs-down">

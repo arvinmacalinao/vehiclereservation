@@ -16,4 +16,10 @@ class Driver extends User
     {
         return $this->hasOne(UserRole::class, 'u_id', 'u_id');
     }
+
+    public function reservations()
+    {
+        return $this->belongsTo(Reservation::class, 'u_id', 'driver_id');
+    }
+    
 }

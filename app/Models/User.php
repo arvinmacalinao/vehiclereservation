@@ -127,7 +127,7 @@ class User extends Authenticatable
         return $this->belongsTo(UserRole::class, 'u_id', 'role_id');
     }
 
-    public function roless()
+    public function users_role()
     {
         return $this->hasOne(UserRole::class, 'u_id', 'u_id');
     }

@@ -17,7 +17,7 @@
     @endif
     <!-- End -->
       <div class="card-header">
-        <h3 class="card-title">{{ $data['page'] }}</h3>
+        <h3 class="card-title">{{ $data['page'] }}</h3>in
       </div>
       <div class="card-body p-0">
         <div class="row">

@@ -163,9 +163,43 @@ class ReservationController extends Controller
         $types          = VehicleType::orderBy('name', 'asc')->get();
         
          // Fetch available vehicles and drivers
-        $availability = $this->getAvailableVehiclesAndDrivers($r->start_date, $r->end_date, $r->time, $r->end_time, $r->vtype_id);
-        $availableVehicles = $availability['vehicles'];
-        $availableDrivers = $availability['drivers'];
+        // $availability = $this->getAvailableVehiclesAndDrivers($r->start_date, $r->end_date, $r->start_time, $r->end_time, $r->vtype_id);
+        // $availableVehicles = $availability['vehicles'];
+        // $availableDrivers = $availability['drivers'];
+
+        $startDateTime = Carbon::parse($r->start_date . ' ' . $r->start_time);
+        $endDateTime = Carbon::parse($r->end_date . ' ' . $r->end_time);
+
+        $availableVehicles = Vehicle::whereDoesntHave('reservations', function ($query) use ($startDateTime, $endDateTime) {
+            $query->where(function ($query) use ($startDateTime, $endDateTime) {
+                $query->where(function ($query) use ($startDateTime, $endDateTime) {
+                    $query->where('start_date', '>=', $startDateTime->toDateString())
+                        ->where('start_time', '<', $endDateTime->toTimeString());
+                })->orWhere(function ($query) use ($startDateTime, $endDateTime) {
+                    $query->where('end_date', '>', $startDateTime->toDateString())
+                        ->where('end_time', '<=', $endDateTime->toTimeString());
+                });
+            });
+        })->where('type_id', $r->vtype_id)->where('status_id', '=', 1)
+        ->get();
+
+        $availableDrivers = Driver::whereHas('users_role', function ($query) {
+            $query->whereHas('roles', function ($query) {
+                $query->where('name', 'DRIVER');
+            });
+        })
+        ->whereDoesntHave('reservations', function ($query) use ($startDateTime, $endDateTime) {
+            $query->where(function ($query) use ($startDateTime, $endDateTime) {
+                $query->where(function ($query) use ($startDateTime, $endDateTime) {
+                    $query->where('start_date', '>=', $startDateTime->toDateString())
+                        ->where('start_time', '<', $endDateTime->toTimeString());
+                })->orWhere(function ($query) use ($startDateTime, $endDateTime) {
+                    $query->where('end_date', '>', $startDateTime->toDateString())
+                        ->where('end_time', '<=', $endDateTime->toTimeString());
+                });
+            });
+        })
+        ->get();
         
         return view('pages.reservation.view', compact('id', 'msg', 'r', 'types', 'app_id', 'availableVehicles', 'availableDrivers'));
     }
@@ -177,7 +211,7 @@ class ReservationController extends Controller
         // where('type_id', $vtype_id)
         // ->where('status_id', '=', 1)->get();
 
-        $availableDrivers = Driver::whereHas('roless', function ($query) {
+        $availableDrivers = Driver::whereHas('users_role', function ($query) {
             $query->whereHas('roles', function ($query) {
                 $query->where('name', 'DRIVER');
             });
@@ -195,7 +229,7 @@ class ReservationController extends Controller
             ->where(function ($query) use ($startDate, $endDate, $startTime, $endTime) {
                 $query->whereDate('start_date', '<=', $endDate)
                     ->whereDate('end_date', '>=', $startDate)
-                    ->whereTime('time', '<=', $endTime)
+                    ->whereTime('start_time', '<=', $endTime)
                     ->whereTime('end_time', '>=', $startTime);
             });
         })
@@ -213,7 +247,7 @@ class ReservationController extends Controller
         //             ->where(function ($query) use ($startDate, $endDate, $startTime, $endTime) {
         //                 $query->whereDate('start_date', '<=', $endDate)
         //                     ->whereDate('end_date', '>=', $startDate)
-        //                     ->whereTime('time', '<=', $endTime)
+        //                     ->whereTime('start_time', '<=', $endTime)
         //                     ->whereTime('end_time', '>=', $startTime);
         //             });
         //     })
@@ -282,7 +316,7 @@ class ReservationController extends Controller
         $vehicle_type  = VehicleType::where('vtype_id', $r->vtype_id)->first();
 
          // Fetch available vehicles and drivers
-         $availability = $this->getAvailableVehiclesAndDrivers($r->start_date, $r->end_date, $r->time, $r->end_time, $r->vtype_id);
+         $availability = $this->getAvailableVehiclesAndDrivers($r->start_date, $r->end_date, $r->start_time, $r->end_time, $r->vtype_id);
          $availableVehicles = $availability['vehicles'];
          $availableDrivers = $availability['drivers'];
         
@@ -357,5 +391,21 @@ class ReservationController extends Controller
             'read_at' => null,
         ]);
         }
+    }
+
+    public function arrived(Request $request, $id)
+    {
+        $r = Reservation::findOrFail($id);
+        if(!$r) {
+            $request->session()->put('session_msg', 'Record not found!');
+            return redirect(route('reservation.index'));
+        } else {
+            $date_today = now()->timezone('Asia/Singapore')->toDateString(); 
+            $time_today = now()->timezone('Asia/Singapore')->toTimeString(); 
+            $r->update(['end_time' => $time_today, 'end_date' => $date_today]);
+
+            $request->session()->put('session_msg', 'Reservation Completed!');
+            return redirect(route('dashboard'));
+        }        
     }
 }

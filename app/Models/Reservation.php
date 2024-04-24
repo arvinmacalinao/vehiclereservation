@@ -20,7 +20,7 @@ class Reservation extends Model
     protected $table        = 'reservations';
     protected $primaryKey   = 'r_id';
     protected $fillable = [ 'u_id', 'v_id', 'driver_name', 'purpose', 'destination', 'start_date', 
-    'end_date', 'time', 'end_time', 'vtype_id', 'remarks', 'passenger', 'requested_by', 'status_id', 
+    'end_date', 'time', 'start_time','end_time', 'vtype_id', 'remarks', 'passenger', 'requested_by', 'status_id', 
     'deleted_at', 'created_at', 'updated_at'
     ];
 
@@ -66,11 +66,6 @@ class Reservation extends Model
         return $this->belongsTo(Vehicle::class, 'v_id', 'v_id');
     }
 
-    public function driver()
-    {
-        return $this->belongsTo(Driver::class, 'driver_name', 'd_id');
-    }
-
     public function vehicle_type()
     {
         return $this->belongsTo(VehicleType::class, 'vtype_id', 'vtype_id');
@@ -79,5 +74,15 @@ class Reservation extends Model
     public function status()
     {
         return $this->belongsTo(ReservationStatus::class, 'status_id', 'id' );
+    }
+
+    public function driver()
+    {
+        return $this->belongsTo(Driver::class, 'u_id' , 'u_id');
+    }
+
+    public function drivers()
+    {
+        return $this->belongsTo(Driver::class, 'driver_id' , 'u_id');
     }
 }

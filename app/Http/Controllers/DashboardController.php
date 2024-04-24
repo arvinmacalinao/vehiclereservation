@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use View;
+use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -41,15 +43,18 @@ class DashboardController extends Controller
         // Format reservation data for FullCalendar
         $events = [];
         foreach ($reservations as $reservation) {
+            $drivername = User::where('u_id', $reservation->driver_id)->first();
             $events[] = [
                 'title' => $reservation->purpose,
-                'start' => $reservation->start_date . 'T' . $reservation->time, 
-                'time' => $reservation->time,
+                'start' => $reservation->start_date . 'T' . $reservation->start_time, 
+                'time' => $reservation->start_time,
+                'returntime' => Carbon::parse($reservation->end_time)->format('h:i a'),
                 'purpose' => $reservation->purpose,
                 'destination' => $reservation->destination,
-                'driver' => $reservation->driver_name ?? 'not set',
-                'vehicle' => $reservation->vehicle->equipment_name ?? 'not set',
+                'driver' =>  $drivername->first_name . ' ' . $drivername->last_name ?? 'not set' ,
+                'vehicle' => $reservation->vehicle->equipment_name . ' - ' . $reservation->vehicle->plate_number ?? 'not set',
                 'status' => $reservation->status->name,
+                'reservation_id' => $reservation->r_id,
             ];
         }
 

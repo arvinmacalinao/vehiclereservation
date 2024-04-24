@@ -49,7 +49,7 @@
                     <th class="text-center" width="30%">Status</th>
                     <th class="text-center">Created By</th>
                     <th class="text-center">Created At</th>
-                    <th class="text-center" width="30%">Action</th>
+                    <th class="text-center" width="40%">Action</th>
                 </tr>
             </thead>
             <tbody>

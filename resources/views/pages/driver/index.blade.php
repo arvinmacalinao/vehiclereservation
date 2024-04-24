@@ -22,11 +22,6 @@
       <div class="card-body p-0">
         <div class="row">
             <div class="col-md-6">
-                <a class="btn btn-success btn-sm m-2" href="{{ route('driver.add') }}">
-                    <i class="fas fa-folder">
-                    </i>
-                    Add New {{ $data['page']}}
-                </a>
             </div>
             <div class="col-md-6">
                 <!-- Pagination section -->
@@ -60,22 +55,11 @@
                     <td>{{ $row->updated_at }}</td>
                     
                     <td  class="project-actions text-right">
-                        {{-- {{ route('vehicle.schedule', ['id' => $row->v_id]) }} --}}
-                        <a class="btn btn-info btn-sm" href="">
+                        <a class="btn btn-info btn-sm" href="{{ route('driver.schedule', ['id' => $row->u_id]) }}">
                             <i class="fas fa-calendar">
                             </i>
                             View Schedule
                         </a>
-                        {{-- <a class="btn btn-success btn-sm" href=" {{ route('driver.edit', ['id' => $row->d_id]) }}">
-                            <i class="fas fa-pencil-alt">
-                            </i>
-                            Edit
-                        </a>
-                        <a class="btn btn-danger btn-sm  row-delete-btn" href="{{ route('driver.delete', ['id' => $row->d_id]) }}" data-msg="Delete this item?" data-text="#{{ $ctr }}" title="Delete">
-                            <i class="fas fa-trash">
-                            </i>
-                            Delete
-                        </a> --}}
                     </td>
                 </tr>
             </tbody>

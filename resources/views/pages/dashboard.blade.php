@@ -94,14 +94,13 @@
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            // Other configuration options...
-            events: {!! json_encode($events) !!}, // Pass reservation data to FullCalendar
-            eventBackgroundColor: '#377eb8',
+            events: {!! json_encode($events) !!}, 
             eventContent: function(info) {
                 var reservationInfo = '<b>Purpose:</b> ' + info.event.title + '<br>';
                 reservationInfo += '<b>Driver:</b> ' + info.event.extendedProps.driver + '<br>';
                 reservationInfo += '<b>Vehicle:</b> ' + info.event.extendedProps.vehicle + '<br>';
                 reservationInfo += '<b>Destination:</b> ' + info.event.extendedProps.destination + '<br>';
+                reservationInfo += '<b>Returned Time:</b> ' + info.event.extendedProps.returntime + '<br>';
                 reservationInfo += '<b>Status:</b> ' + info.event.extendedProps.status + '<br>';
                 
                 // Convert time format from '19:47' to '7:47 PM'
@@ -114,6 +113,17 @@
                 var formattedTime = hours + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + ampm;
                 
                 return { html: '<div class="fc-content">' + formattedTime + '<br>' + reservationInfo + '</div>' };
+            },
+            eventClick: function(info) {
+                // Get the ID of the clicked event
+                var eventId = info.event.extendedProps.reservation_id;
+
+                // Construct the URL for the reservation view route
+                var reservationViewUrl = "{{ route('reservation.view.view', ['id' => 'id']) }}";
+                reservationViewUrl = reservationViewUrl.replace('id', eventId);
+
+                // Redirect to the reservation view route
+                window.location.href = reservationViewUrl;
             }
         });
         calendar.render();

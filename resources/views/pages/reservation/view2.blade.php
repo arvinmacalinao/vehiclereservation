@@ -24,6 +24,21 @@
             <div class="col-8">
             </div>
             <div class="col-4 text-right mb-2">
+                @php
+                    $endDateTime = Carbon\Carbon::parse($r->end_date . ' ' . $r->end_time, 'Asia/Singapore');
+                    $timetoday = Carbon\Carbon::now('Asia/Singapore');
+
+
+                    // Get the authenticated user
+                    $user = auth()->user();
+                    // Check if the user belongs to the RDU group
+                    $belongsToRDUGroup = $user->user_groups()->where('g_id', 3)->exists();
+              @endphp
+              @if ($belongsToRDUGroup)
+                    @if($endDateTime > $timetoday)
+                        <a class="btn btn-success btn-sm" href="{{ route('reservation.arrived', ['id' => $r->r_id]) }}" title="Arrived"><span class="fa fa-check-circle"></span> Arrived</a>
+                    @endif
+                @endif
                 <a class="btn btn-primary btn-sm" href="{{ url()->previous() }}" title="Back"><span class="fa fa-caret-left"></span> Back</a>
             </div>
             <div class="border-bottom mt-0 mb-2"></div>
@@ -49,7 +64,8 @@
             </div>
             <div class="col-md-2">
                 <label for="time">Time of Departure</label>
-                <input type="text" class="form-control form-control-sm" value="{{ $r->time }}" readonly>
+                <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($r->start_time)->format('h:i a') }}
+                " readonly>
             </div>
             <div class="col-md-2">
                 <label for="end_date">End Date</label>
@@ -57,7 +73,8 @@
             </div>
             <div class="col-md-2">
                 <label for="time">Time of Arrival</label>
-                <input type="text" class="form-control form-control-sm" value="{{ $r->end_time }}" readonly>
+                <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($r->end_time)->format('h:i a') }}
+                " readonly>
             </div>
             <div class="col-md-2">
                 <label for="vtype_id">Select Vehicle Type</label>

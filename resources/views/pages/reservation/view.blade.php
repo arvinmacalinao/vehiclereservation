@@ -47,30 +47,59 @@
                 <form action="{{ route('approval.approve', ['id' => $app_id]) }}" method="post" style="display: inline;">
                     @csrf
                     <div class="card border-primary mb-3" style="">
+                      @php
+                              $approval_status = \App\Models\Approval::where('app_id', $app_id)->first();
+                      @endphp
+                      @if($approval_status->status_id == 2)
+                      <div class="card-header">Assigned Vehicle and Driver</div>
+                      <div class="form-row align-items-center">
+                        <div class="col-sm-3 my-1 ml-3">
+                          <label class="sr-only" for="inlineFormInputGroupUsername"></label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text">Vehicle</div>
+                            </div>
+                            <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="" value="{{ $r->vehicle->equipment_name ?? '-' }} - {{ $r->vehicle->plate_number ?? '-' }}">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-row align-items-center">
+                        <div class="col-sm-3 my-1 ml-3">
+                          <label class="sr-only" for="inlineFormInputGroupUsername"></label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text">Driver</div>
+                            </div>
+                            <input type="text" class="form-control" id="inlineFormInputGroupUsername" placeholder="" value="{{ $r->drivers->FullName ?? '-' }}">
+                          </div>
+                        </div>
+                      </div>
+                      @else
                       <div class="card-header">Assign Vehicle and Driver</div>
                       <div class="card-body">
                         <form>
                           <div class="form-group">
                             <label for="v_id">Select Vehicle</label>
-                            <select name="v_id" id="v_id" class="form-control">
+                            <select name="v_id" id="v_id" class="form-control" required>
                                 <option value="">-- Select Vehicle --</option>
                                 @foreach($availableVehicles as $vehicle)
-                                    <option value="{{ $vehicle->v_id }}">{{ $vehicle->equipment_name }}</option>
+                                    <option value="{{ $vehicle->v_id }}"  {{ old('v_id', $vehicle->v_id) == $r->v_id ? 'selected' : '' }}>{{ $vehicle->equipment_name }}</option>
                                 @endforeach
                             </select>
                           </div>
                           <div class="form-group">
                             <label for="d_id">Select Driver</label>
-                            <select name="driver_id" id="d_id" class="form-control">
+                            <select name="driver_id" id="d_id" class="form-control" required>
                                 <option value="">-- Select Driver --</option>
                                 @foreach($availableDrivers as $driver)
-                                    <option value="{{ $driver->u_id }}">{{ $driver->FullName }}</option>
+                                    <option value="{{ $driver->u_id }}"  {{ old('driver_id', $driver->u_id) == $r->driver_id ? 'selected' : '' }}>{{ $driver->FullName }}</option>
                                 @endforeach
                             </select>
                           </div>
                         </form>
                       </div>
                       <button type="submit" class="btn btn-success btn-sm" title="Approve"><span class="fa fa-thumbs-up"></span> Submit and Approve</button>
+                      @endif
                     </div>
                 </form>
               @endif
@@ -80,14 +109,19 @@
                 <input type="text" class="form-control form-control-sm" value="{{ $r->start_date }}" readonly>
             </div>
             <div class="col-md-2">
+              <label for="time">Time of Departure</label>
+              <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($r->start_time)->format('h:i a') }}" readonly>
+          </div>
+            <div class="col-md-2">
                 <label for="end_date">End Date</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $r->end_date }}" readonly>
             </div>
             <div class="col-md-2">
-                <label for="time">Time of Departure</label>
-                <input type="text" class="form-control form-control-sm" value="{{ $r->time }}" readonly>
-            </div>
-            <div class="col-md-3">
+              <label for="time">Time of Arrival</label>
+              <input type="text" class="form-control form-control-sm" value="{{ \Carbon\Carbon::parse($r->end_time)->format('h:i a') }}" readonly>
+          </div>
+            
+            <div class="col-md-2">
                 <label for="vtype_id">Select Vehicle Type</label>
                 <input type="text" class="form-control form-control-sm" value="{{ $r->vehicle_type->name }}" readonly>
             </div>

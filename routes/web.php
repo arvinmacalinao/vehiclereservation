@@ -53,6 +53,7 @@ Route::get('reservation/delete/{id}', [ReservationController::class, 'destroy'])
 Route::get('reservation/cancel/{id}', [ReservationController::class, 'cancel'])->name('reservation.cancel');
 Route::get('reservation/view/{id}', [ReservationController::class, 'view'])->name('reservation.view');
 Route::get('reservation/{id}/view', [ReservationController::class, 'view2'])->name('reservation.view.view');
+Route::get('reservation/{id}/arrived', [ReservationController::class, 'arrived'])->name('reservation.arrived');
 
 /* Notification */
 Route::any('notifications', [NotificationController::class, 'index'])->name('notification.list');
@@ -69,6 +70,7 @@ Route::get('vehicles/edit/{id}', [VehicleController::class, 'edit'])->name('vehi
 Route::get('vehicles/delete/{id}', [VehicleController::class, 'destroy'])->name('vehicle.delete');
 
 Route::any('vehicle/{id}/schedule', [ScheduleController::class, 'vehicle'])->name('vehicle.schedule');
+Route::any('driver/{id}/schedule', [ScheduleController::class, 'driver'])->name('driver.schedule');
 
 // Drivers
 Route::any('drivers', [DriverController::class, 'index'])->name('driver.index');

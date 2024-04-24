@@ -30,17 +30,17 @@ class ScheduleController extends Controller
     {
         $msg            = $request->session()->pull('session_msg', '');
 
-        $rows =     Reservation::where('v_id', $id)->orderby('start_date', 'desc')->paginate(20);
+        $rows =     Reservation::where('status_id', 1)->where('v_id', $id)->orderby('start_date', 'desc')->paginate(20);
        
-        return view('pages.schedule.vehicle', compact('rows', 'msg'));
+        return view('pages.schedule.vehicle', compact('rows', 'msg', 'id'));
     }
 
     public function driver(Request $request, $id)
     {
         $msg            = $request->session()->pull('session_msg', '');
 
-        $rows =     Reservation::where('v_id', $id)->orderby('start_date', 'desc')->paginate(20);
+        $rows           = Reservation::where('status_id', 1)->where('driver_id', $id)->orderby('start_date', 'desc')->paginate(20);
        
-        return view('pages.schedule.vehicle', compact('rows', 'msg'));
+        return view('pages.schedule.driver', compact('rows', 'msg', 'id'));
     }
 }

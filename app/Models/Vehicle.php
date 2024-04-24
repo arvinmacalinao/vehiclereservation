@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Reservation;
 use App\Models\VehicleType;
 use App\Models\VehicleStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -26,5 +27,10 @@ class Vehicle extends Model
     public function status()
     {
         return $this->belongsTo(VehicleStatus::class, 'status_id', 'id');
+    }
+
+    public function reservations()
+    {
+        return $this->belongsTo(Reservation::class, 'v_id', 'v_id');
     }
 }

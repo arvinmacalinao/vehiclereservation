@@ -16,6 +16,12 @@
           </div>
     @endif
     <!-- End -->
+    <div class="card-header">
+        @php
+            $vehicle =  \App\Models\Vehicle::where('v_id', $id)->first();
+        @endphp
+        <h3 class="card-title">Vehicle: <Strong>{{ $vehicle->equipment_name }} - {{ $vehicle->plate_number }}</Strong></h3>
+    </div>
       <div class="card-body p-0">
         <div class="row">
             <div class="col-md-6">
@@ -51,7 +57,7 @@
                 <tr>
                     <td>{{ $ctr++ }}</td>
                     <td class="text-nowrap"><div>{!! $row->reservation_dates !!}</div></td>
-                    <td class="text-nowrap">{!! $row->driver_id !!}</td>
+                    <td class="text-nowrap">{!! $row->drivers->fullName !!}</td>
                     <td class="">{!! nl2br($row->destination) !!}</a></td> 
                     <td>{{ $row->purpose }}</td>                
                     <td class="text-center">{{ $row->status->name}}</td>                

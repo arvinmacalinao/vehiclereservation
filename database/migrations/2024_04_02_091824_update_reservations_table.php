@@ -22,8 +22,9 @@ class UpdateReservationsTable extends Migration
             $table->dropColumn('is_active');
             $table->dropColumn('is_read');
             $table->dropColumn('is_printed');
-            $table->dropColumn('status_id');
-            
+            $table->dropColumn('status');
+            $table->unsignedInteger('driver_id')->nullable()->after('v_id');
+            $table->foreign('driver_id')->references('u_id')->on('users')->onDelete('set null');
             $table->time('end_time')->nullable()->after('time');
             $table->unsignedBigInteger('status_id')->nullable()->after('requested_by');
             $table->foreign('status_id')->references('id')->on('reservation_status')->onDelete('cascade');

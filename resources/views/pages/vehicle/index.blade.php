@@ -43,6 +43,7 @@
                 <tr>
                     <th>#</th>
                     <th>Plate Number</th>
+                    <th>Make/Model</th>
                     <th>Vehicle Type</th>
                     <th>Status</th>
                     <th></th>
@@ -57,6 +58,7 @@
                 <tr>
                     <td>{{ $ctr++ }}</td>
                     <td>{{ $row->plate_number }}</td>
+                    <td>{{ $row->equipment_name }}</td>
                     <td>{{ $row->type->name ?? '' }}</td>
                     <td>{{ $row->status->name ?? '' }}</td>
                     <td  class="project-actions text-right">
