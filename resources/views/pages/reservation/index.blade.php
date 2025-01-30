@@ -67,7 +67,7 @@
                     <td class="w-30 mw-0 long-text"><a class="text-primary" data-placement="left" data-toggle="tooltip" data-placement="top" title="{{ $row->purpose }}" href="#">{!! nl2br($row->destination) !!}</a></td> 
                     <td class="text-center">
                     @if($row->status_id == 3)
-                        <small><i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Cancelled"></i>Cancelled</small>
+                        <small><i class="fa fa-times-circle text-danger" data-toggle="tooltip" data-placement="top" title="Cancelled"></i> Cancelled</small>
                     @else
                         @php
                             $res_ug_id      = \App\Models\UserGroup::where('u_id', $row->u_id)->value('g_id');
@@ -91,6 +91,8 @@
                             <small>For RDU Approval: <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i></small>
                         @elseif($rdu_approval->status_id == 1)
                             <small>For RDU Approval: <i class="fa fa-exclamation-circle text-warning" data-toggle="tooltip" data-placement="top" title="Pending"></i></small>
+                        @elseif($row->status_id == 5)
+                        <small> RDU Approval: Unavailable Car/Driver <i class="fa fa-ban text-warning" data-toggle="tooltip" data-placement="top" title="Unavailable"></i></small>
                         @elseif($rdu_approval->status_id == 2)
                         <small>
                             Approved by: {!! $rdu_approval->user->last_name !!}:

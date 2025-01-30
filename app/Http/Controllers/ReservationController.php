@@ -51,15 +51,15 @@ class ReservationController extends Controller
 
         if($userrole->roles->name == 'RANK AND FILE')
         {
-            $rows  = Reservation::where('u_id', Auth::id())->paginate(20);
+            $rows  = Reservation::where('u_id', Auth::id())->orderBy('created_at', 'desc')->paginate(20);
         }
         elseif($userrole->roles->name == 'SUPERADMIN')
         {
-            $rows  = Reservation::paginate(20);
+            $rows  = Reservation::orderBy('created_at', 'desc')->paginate(20);
         }
         elseif($userGroup->g_id == 3)
         {
-            $rows  = Reservation::paginate(20);
+            $rows  = Reservation::orderBy('created_at', 'desc')->paginate(20);
         }
         else
         {
@@ -67,6 +67,7 @@ class ReservationController extends Controller
            $rows = Reservation::join('users', 'reservations.u_id', '=', 'users.u_id')
                    ->join('user_groups', 'users.u_id', '=', 'user_groups.u_id')
                    ->where('user_groups.g_id', $userGroup->g_id)
+                   ->orderBy('reservations.created_at', 'desc')
                    ->paginate(20);
         }
         return view('pages.reservation.index', compact('rows', 'msg'));

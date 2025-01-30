@@ -24,11 +24,6 @@ class Reservation extends Model
     'deleted_at', 'created_at', 'updated_at'
     ];
 
-    public function passengers()
-    {
-        return $this->belongsToMany(User::class, 'passengers', 'r_id', 'u_id')->withPivot('tagged', 'approved', 'disapproved');
-    }
-
     public function getReservationDatesAttribute($value)
     {
         $startDate = new \DateTime($this->start_date);

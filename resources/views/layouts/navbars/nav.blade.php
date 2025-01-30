@@ -99,7 +99,7 @@
             @endphp   
             @if($driver)
             <li class="nav-item">
-              <a href="" class="nav-link">
+              <a href="{{ route('schedule', ['id' => Auth::id()]) }}" class="nav-link">
                 <i class="fa-solid fas fa-car-side"></i>
                 <p>
                   Scheduled Trips
@@ -212,70 +212,11 @@
                   </a>
                 </li>
             @else
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
+            
             @endif
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
-            <li class="nav-item mb-5 mt-5">
-              <a href="#" class="nav-link">
-                <i></i>
-                <p></p>
-              </a>
-            </li>
           </ul>
         </nav>
         <!-- /.sidebar-menu -->
       </div>
     </aside>
-  </div>
+  

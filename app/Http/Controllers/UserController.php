@@ -35,7 +35,8 @@ class UserController extends Controller
     {
         $msg        = $request->session()->pull('session_msg', '');
 
-        $rows       = User::where('u_id', '!=', 1)->paginate(20);
+        // $rows       = User::where('u_id', '!=', 1)->paginate(20);
+        $rows       = User::paginate(20);
        
         return view('pages.users.index', compact('rows', 'msg'));
     }

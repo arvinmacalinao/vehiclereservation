@@ -20,7 +20,7 @@
         @php
             $driver_name =  \App\Models\User::where('u_id', $id)->first();
         @endphp
-        <h3 class="card-title">Driver: <Strong>{{ $driver_name->FullName }}</Strong></h3>
+        <h3 class="card-title"><Strong>{{ $driver_name->FullName }}</Strong> Scheduled Trips</h3>
       </div>
       <div class="card-body p-0">
         <div class="row">
@@ -53,28 +53,17 @@
                 $ctr = $rows->firstItem();
              ?>
             <tbody>
-                @foreach ($rows as $row)
-                    @php
-                        $reservationDate = \Carbon\Carbon::parse($row->start_date);
-                        if ($reservationDate->isToday()) {
-                            $dateClass = 'table-success';
-                        } elseif ($reservationDate->isFuture()) {
-                            $dateClass = 'table-primary';
-                        } else {
-                            $dateClass = 'table-secondary';
-                        }
-                    @endphp
-                    <tr class="{{ $dateClass }}">
-                        <td>{{ $ctr++ }}</td>
-                        <td class="text-nowrap"><div>{!! $row->reservation_dates !!}</div></td>
-                        <td class="text-nowrap">{!! $row->vehicle->equipment_name !!} - {!! $row->vehicle->plate_number !!}</td>
-                        <td class="">{!! nl2br($row->destination) !!}</td> 
-                        <td>{{ $row->purpose }}</td>                
-                        <td class="text-center">{{ $row->status->name }}</td>
-                    </tr>
-                @endforeach
+            @foreach ($rows as $row)
+            <tr>
+                <td>{{ $ctr++ }}</td>
+                <td class="text-nowrap"><div>{!! $row->reservation_dates !!}</div></td>
+                <td class="text-nowrap">{!! $row->vehicle->equipment_name !!} - {!! $row->vehicle->plate_number !!}</td>
+                <td class="">{!! nl2br($row->destination) !!}</a></td> 
+                <td>{{ $row->purpose }}</td>                
+                <td class="text-center">{{ $row->status->name}}</td>                
+            </tr>
             </tbody>
-            
+            @endforeach
         </table>
       </div>
       <!-- /.card-body -->

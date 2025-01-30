@@ -53,17 +53,30 @@
                 $ctr = $rows->firstItem();
              ?>
             <tbody>
-            @foreach ($rows as $row)
-                <tr>
-                    <td>{{ $ctr++ }}</td>
-                    <td class="text-nowrap"><div>{!! $row->reservation_dates !!}</div></td>
-                    <td class="text-nowrap">{!! $row->drivers->fullName !!}</td>
-                    <td class="">{!! nl2br($row->destination) !!}</a></td> 
-                    <td>{{ $row->purpose }}</td>                
-                    <td class="text-center">{{ $row->status->name}}</td>                
-                </tr>
+                @foreach ($rows as $row)
+                    @php
+                        // Parse the reservation date or set a default if null
+                        $reservationDate = $row->start_date ? \Carbon\Carbon::parse($row->start_date) : null;
+            
+                        // Determine row class based on the date
+                        if ($reservationDate->isToday()) {
+                            $dateClass = 'table-success';
+                        } elseif ($reservationDate->isFuture()) {
+                            $dateClass = 'table-primary';
+                        } else {
+                            $dateClass = 'table-secondary';
+                        }
+                    @endphp
+                    <tr class="{{ $dateClass }}">
+                        <td>{{ $ctr++ }}</td>
+                        <td class="text-nowrap"><div>{!! $row->reservation_dates ?? 'N/A' !!}</div></td>
+                        <td class="text-nowrap">{!! optional($row->drivers)->fullName ?? 'N/A' !!}</td>
+                        <td class="">{!! nl2br($row->destination ?? 'N/A') !!}</td>
+                        <td>{{ $row->purpose ?? 'N/A' }}</td>
+                        <td class="text-center">{{ optional($row->status)->name ?? 'N/A' }}</td>
+                    </tr>
+                @endforeach
             </tbody>
-            @endforeach
         </table>
       </div>
       <!-- /.card-body -->

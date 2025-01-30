@@ -6,6 +6,7 @@ use View;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Driver;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -115,5 +116,14 @@ class DriverController extends Controller
             $request->session()->put('session_msg', 'Record deleted!');
             return redirect(route('driver.index'));
         }        
+    }
+
+    public function view(Request $request, $id)
+    {
+        $msg            = $request->session()->pull('session_msg', '');
+        
+        $rows           = Reservation::where('status_id', 1)->where('driver_id', $id)->orderby('start_date', 'desc')->paginate(20);
+       
+        return view('pages.driver.view', compact('rows', 'msg', 'id'));
     }
 }

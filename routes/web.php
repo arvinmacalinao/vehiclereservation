@@ -78,6 +78,7 @@ Route::get('driver/add', [DriverController::class, 'create'])->name('driver.add'
 Route::post('driver/store/{id}', [DriverController::class, 'store'])->name('driver.store');
 Route::get('driver/edit/{id}', [DriverController::class, 'edit'])->name('driver.edit');
 Route::get('driver/delete/{id}', [DriverController::class, 'destroy'])->name('driver.delete');
+Route::get('schedule/{id}', [DriverController::class, 'view'])->name('schedule');
 });
 
 Route::middleware(['auth', 'checkRole:MANAGER,SUPERADMIN,SUPERVISOR,VICE PRESIDENT'])->group(function () {
@@ -90,8 +91,8 @@ Route::middleware(['auth', 'checkRole:MANAGER,SUPERADMIN,SUPERVISOR,VICE PRESIDE
     Route::get('approval/delete/{id}', [ApprovalController::class, 'destroy'])->name('approval.delete');
     Route::any('approval/{id}/approve', [ApprovalController::class, 'approve'])->name('approval.approve');
     Route::any('approval/{id}/disapprove', [ApprovalController::class, 'disapprove'])->name('approval.disapprove');
+    Route::any('approval/{id}/unavailable', [ApprovalController::class, 'unavailable'])->name('approval.unavailable');
 
-    
 });
     
 Route::middleware(['auth', 'checkRole:SUPERADMIN'])->group(function () {
@@ -123,8 +124,6 @@ Route::get('group/delete/{id}', [GroupController::class, 'destroy'])->name('grou
 });
 
 Route::middleware(['auth', 'checkRole:SUPERADMIN, DRIVER'])->group(function () {
-    // Routes accessible only to users with the 'admin' role
-    // Driver Listing
     
 });
 

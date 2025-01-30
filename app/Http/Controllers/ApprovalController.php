@@ -103,7 +103,9 @@ class ApprovalController extends Controller
     public function disapprove(Request $request, $id)
     {
         $currentApproval = Approval::findOrFail($id);
+        $user_id         = Auth::id();
 
+        $currentApproval->u_id = $user_id;
         $currentApproval->status_id = 3;
         $currentApproval->save();
 
@@ -148,5 +150,42 @@ class ApprovalController extends Controller
             'read_at' => null,
         ]);
         
+    }
+
+    private function notifyUnavailable($r) {
+        $user = User::where('u_id', $r->u_id)->value('u_id');
+
+        Notification::create([
+            'not_message' => 'No vehicle or driver available for the reservation - RDU',
+            'r_id' => $r->r_id,
+            'u_id' => $user,
+            'new_user_id' => null,
+            'app_id' => null,
+            'read_at' => null,
+        ]);
+        
+    }
+
+    public function unavailable(Request $request, $id)
+    {
+        $currentApproval = Approval::findOrFail($id);
+        $user_id         = Auth::id();
+
+        $currentApproval->u_id = $user_id;
+        $currentApproval->status_id = 3;
+        $currentApproval->save();
+
+        $r = Reservation::where('r_id', $currentApproval->r_id)->first();
+
+        $get_old_remarks = $r->remarks;
+
+        $r->status_id = 5;
+        $r->remarks = $get_old_remarks . "<br></br>" . "RDU: No cars or driver available for the reservation";
+        $r->save();
+
+        $this->notifyUnavailable($r);
+
+        $request->session()->put('session_msg', 'Approval updated successfully.');
+        return redirect()->route('approval.index');
     }
 }

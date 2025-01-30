@@ -14,7 +14,7 @@ class UpdateReservationsTable3 extends Migration
     public function up()
     {
         Schema::table('reservations', function (Blueprint $table) {
-            $table->time('x')->nullable()->after('time');
+            $table->time('start_time')->nullable()->after('time');
         });
     }
 

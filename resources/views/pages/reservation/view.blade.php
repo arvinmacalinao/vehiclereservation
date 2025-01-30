@@ -83,7 +83,7 @@
                             <select name="v_id" id="v_id" class="form-control" required>
                                 <option value="">-- Select Vehicle --</option>
                                 @foreach($availableVehicles as $vehicle)
-                                    <option value="{{ $vehicle->v_id }}"  {{ old('v_id', $vehicle->v_id) == $r->v_id ? 'selected' : '' }}>{{ $vehicle->equipment_name }}</option>
+                                    <option value="{{ $vehicle->v_id }}"  {{ old('v_id', $vehicle->v_id) == $r->v_id ? 'selected' : '' }}>{{ $vehicle->equipment_name }} - {{ $vehicle->plate_number }}</option>
                                 @endforeach
                             </select>
                           </div>
@@ -98,7 +98,14 @@
                           </div>
                         </form>
                       </div>
-                      <button type="submit" class="btn btn-success btn-sm" title="Approve"><span class="fa fa-thumbs-up"></span> Submit and Approve</button>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <button type="submit" class="btn btn-success btn-sm btn-block" title="Approve"><span class="fa fa-thumbs-up"></span> Submit and Approve</button>
+                        </div>
+                        <div class="col-md-6">
+                          <a href="{{ route('approval.unavailable', [ 'id' => $app_id ]) }}" class="btn btn-warning btn-sm btn-block text-light"><span class="fa fa-ban"></span> No Available Vehicle/Driver</a>
+                        </div>
+                      </div>
                       @endif
                     </div>
                 </form>

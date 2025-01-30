@@ -1,6 +1,5 @@
 @extends('layouts.app', [
-    'class' => '',
-    'elementActive' => 'driver'
+    'class' => ''
 ])
 @section('content')
 <!-- Main content -->
@@ -16,11 +15,6 @@
           </div>
     @endif
     <!-- End -->
-      <div class="card-header">
-        <h3 class="card-title">{{ $data['page'] }}</h3>
-
-        </div>
-      </div>
       <div class="card-body p-0">
         <div class="row">
             <div class="col-md-6">
@@ -86,10 +80,6 @@
 
     $(".alert").delay(4000).slideUp(200, function() {
         $(this).alert('close');
-    });
-
-    $('#page-select').change(function() {
-        window.location.href = $(this).val();
     });
 });
 </script>

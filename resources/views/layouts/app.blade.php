@@ -32,16 +32,18 @@
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.css" integrity="sha512-0nkKORjFgcyxv3HbE4rzFUlENUMNqic/EzDIeYCgsKa/nwqr2B91Vu/tNAu4Q0cBuG4Xe/D1f/freEci/7GDRA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <div id="app">
-        @auth()
-        @include('layouts.page_templates.auth')
-        @include('subviews.confirmation_modal')
-        @endauth
-        
-        @guest
-        @include('layouts.page_templates.guest')
-        @include('subviews.confirmation_modal')
-    @endguest
+    <div class="wrapper">
+        <div id="app">
+            @auth()
+            @include('layouts.page_templates.auth')
+            @include('subviews.confirmation_modal')
+            @endauth
+            
+            @guest
+            @include('layouts.page_templates.guest')
+            @include('subviews.confirmation_modal')
+            @endguest
+        </div>
     </div>
 </body>
 <!-- jQuery -->

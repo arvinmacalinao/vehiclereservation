@@ -13,6 +13,13 @@
   <link rel="stylesheet" href="../plugins/fullcalendar/main.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../dist/css/adminlte.min.css">
+  <style>
+    #calendar {
+      transform: scale(.95); /* Adjust the zoom level (0.8 = 80% zoom) */
+      transform-origin: top left; /* Keeps the zooming aligned to the top-left */
+      margin-left: 5%;
+    }
+  </style>
 </head>
 <body class="hold-transition sidebar-mini">
 @include('layouts.navbars.nav')

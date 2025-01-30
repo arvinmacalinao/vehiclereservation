@@ -33,7 +33,7 @@ class AppServiceProvider extends ServiceProvider
                 ->where('read_at', null)
                 ->orderBy('created_at', 'desc')
                 ->get();
-            $view->with('notifications', $notifications);
+            $view->with('notifications', $notifications); 
         });
     }
 }

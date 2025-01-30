@@ -30,7 +30,7 @@ class NotificationController extends Controller
     {
         $msg            = $request->session()->pull('session_msg', '');
 
-        $rows           = Notification::where('u_id', Auth::id('u_id'))->orderby('created_at', 'desc')->paginate(20);
+        $rows           = Notification::where('u_id', Auth::id('u_id'))->orderby('created_at', 'desc')->paginate(10);
 
         return view('pages.notifications.index', compact('rows', 'msg'));
     }
